@@ -68,9 +68,10 @@ Donec vel risus lectus. Sed imperdiet convallis laoreet. Aliquam sodales nec dui
             <input placeholder="Type your message here..." defaultValue={inputValue}
             onChange={(e)=> setInputValue(e.target.value)}></input>
             <img className={classes.emoji_icon} src={emoji} alt='emoji'></img>
-            <div className={classes.send}>
+            <button type="submit" className={classes.send}>
                 <img src={arrowright} alt='>'></img>
-            </div>
+            </button>
+            
         </div>
     </div>)
     
