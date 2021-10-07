@@ -4,6 +4,8 @@ import dots_black from '../../assets/dots_black.svg'
 import bell from '../../assets/bell.svg'
 import search from '../../assets/search.svg'
 
+import ChatItem from './ChatItem/ChatItem';
+
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
@@ -49,7 +51,7 @@ const ChatList = () => {
         </div>
 
         <div className={classes.main}>
-
+                <ChatItem />
         </div>
     </div>)
     
