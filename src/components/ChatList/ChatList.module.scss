@@ -1,0 +1,125 @@
+@import '../../style/variables.scss';
+
+.container {
+    padding-top: 2rem;
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    flex-direction: column;
+
+    border-right-style: solid;
+    border-right-color: gray;
+    border-width: 1.5px;
+    & h3 {
+        grid-row: 1/2;
+        grid-column: 1/2;
+        font-size: 2rem;
+    }
+
+}
+
+.top {
+    display: grid;
+    grid-template-rows: min-content ;
+    grid-template-columns: 30% 70%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-bottom-style: solid;
+    border-bottom-color: $color-gray;
+    border-width: 1.5px;
+    position: relative;
+}
+
+.icons {
+    grid-row: 1/2;
+    grid-column: 2/3;
+    justify-self: end;
+
+    & img {
+        margin-left: 1rem;
+    }
+}
+
+.select {
+    grid-row: 2/3;
+    grid-column: 1/2;
+    border-style: solid;
+    border-color: $color-gray;
+    border-width: 1px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+
+    & select {
+        width: 90%;
+        height: 100%;
+        outline: none;
+        border-style: none;
+        font-size: 1.4rem;
+
+        & option {
+            width: 200px;
+        }
+    }
+
+}
+
+.input {
+    grid-row: 2/3;
+    grid-column: 2/3;
+    justify-self: end;
+    display: flex;
+    width: 90%;
+    border-style: solid;
+    border-color: $color-gray;
+    border-width: 1px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    & input {
+        outline: none;
+        width: 85%;
+        color: $color-gray;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 1rem;
+        border: none;
+    }
+
+}
+
+.popup {
+    position: absolute;
+    z-index: 100;
+    font-size: 1.6rem;
+    background-color: white;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1.5px;
+    border-color: rgb(204, 204, 204);
+    right: 20px;
+    top: 3rem;
+    & ul {
+        list-style-type: none;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+
+        & li {
+            padding-right: 3rem;
+            padding-left: 3rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        & li:hover {
+            background-color: $color-gray-light;
+        }
+    }
+}
+
+.main {
+    height: 100%;
+    background-color: $color-gray-light;
+    padding-top: 1rem;
+}
+

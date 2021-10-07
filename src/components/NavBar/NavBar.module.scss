@@ -1,0 +1,51 @@
+@import '../../style/variables.scss';
+.main {
+    height: 100vh;
+    background-color: $color-primary;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+}
+
+.logo_container {
+    grid-row: 1/2;
+    grid-column: 1/2;
+    display: flex;
+    justify-content: center;
+
+    margin-top: 1rem;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 5px;
+
+}
+
+.logo {  
+    margin: 0.75rem 0.75rem 0.75rem 0.75rem;
+}
+
+.nav {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    grid-row: 2/3;
+    grid-column: 1/2;
+
+    & img {
+        height: 32px;
+        opacity: 0.8;
+        //margin-bottom: 4rem;
+    }
+
+    & img:hover {
+        opacity: 1;
+        height: 35px;
+    }
+}
+
+.icon_container {
+    width: 35px;
+    height: 100px;
+}
