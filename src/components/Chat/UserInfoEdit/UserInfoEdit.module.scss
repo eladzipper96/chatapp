@@ -3,11 +3,14 @@
 .container{
     width: 100%;
     font-size: 1.6rem;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 92vh;
+    overflow-y: visible;
 }
 
 .top {
+    grid-row: 1/2;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -28,6 +31,7 @@
 }
 
 .main {
+    grid-row: 2/3;
     margin-top: 2rem;
     overflow-y: scroll;
     margin-right: -20px;
@@ -36,6 +40,7 @@
 .item{
     margin-left: 5rem;
     margin-right: 5rem;
+    margin-bottom: 3rem;
     background-color: $color-gray-light;
     border-style: solid;
     border-width: 1.5px;
@@ -70,7 +75,7 @@
 
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+
 }
 
 .input {
@@ -91,6 +96,10 @@
         border-style: solid;
         border-radius: 5px;
     }
+}
+
+.account {
+    grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 
 .inputlong{
