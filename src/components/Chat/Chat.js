@@ -1,6 +1,7 @@
 import classes from './Chat.module.scss';
 import ChatRoom from './ChatRoom/ChatRoom';
 import ContactInfo from './ContactInfo/ContactInfo';
+import UserInfoEdit from './UserInfoEdit/UserInfoEdit';
 
 import { useSelector } from 'react-redux';
 
@@ -13,6 +14,7 @@ const Chat = () => {
             
             {header === 'Chats' && <ChatRoom />}
             {header === 'Contacts' && <ContactInfo />}
+             {header === 'Profile' && <UserInfoEdit />}
         </div>
        
     )       
