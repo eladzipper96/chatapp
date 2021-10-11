@@ -1,0 +1,74 @@
+@import '../../../style/variables.scss';
+
+.main {
+    position: relative;
+    padding-left: 3rem;
+    padding-bottom: 3rem; // temp
+}
+
+.main_user {
+    align-self: end;
+    padding-left: unset !important;
+    padding-right: 3rem;
+}
+
+.container {
+    width: 400px;
+    font-size: 1.7rem;
+    padding: 2rem 2rem;
+    border-style: solid;
+    border-width: 1.5px;
+    border-radius: 15px;
+    font-weight: bolder; 
+}
+
+
+.blue {
+    color: white;
+    background-color: $color-primary;
+}
+
+.white {
+    color: gray;
+    background-color: $color-gray-light;
+    border-color: $color-gray-light;
+}
+
+.time {
+    font-size: 1.2rem;
+    position: absolute;
+    margin-top: 0.5rem;
+    color: gray;
+    left: 60px;
+}
+
+.time_user {
+    left: unset !important;
+    right: 60px;
+}
+
+.picture_container {
+    background-color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    padding: 10px 10px;
+    position: absolute;
+
+    & img {
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        
+    }
+}
+
+.picture_friend {
+    bottom: -5px;
+    left: -5px;
+}
+
+.picture_user {
+    bottom: 0px;
+    right: 0px;
+}

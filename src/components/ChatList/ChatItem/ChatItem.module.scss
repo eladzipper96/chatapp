@@ -5,8 +5,9 @@
     grid-template-columns: 20% 50% 30%;
     grid-template-rows: min-content min-content;
     font-size: 1.4rem;
-    margin-right: 1rem;
+    margin-right: 3rem; // added 2 rem for hiding the scrollbar
     margin-left: 1rem;
+    margin-bottom: 1.5rem;
     padding: 1rem 1rem 1rem 1rem;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -48,8 +49,15 @@
 }
 
 .msg {
+    display: flex;
     grid-row: 2/3;
     grid-column: 2/4;
-    justify-self: start;
-    align-self: center;
+    font-size: 1.6rem;
+    //justify-self: start;
+    align-self: flex-end;
+
+
+    & img {
+        align-self: flex-end;
+    }
 }

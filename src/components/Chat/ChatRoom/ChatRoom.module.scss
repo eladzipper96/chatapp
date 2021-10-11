@@ -57,6 +57,10 @@
 
 .topbar_right {
     align-self: center;
+
+    & img {
+        cursor: pointer;
+    }
 }
 
 .search {
@@ -104,7 +108,8 @@
 .chatbox {
     padding-left: 4rem;
     padding-right: 4rem;
-
+    display: flex;
+    flex-direction: column;
 }
 
 .input_container {

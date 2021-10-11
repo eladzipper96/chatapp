@@ -5,10 +5,10 @@
     display: grid;
     grid-template-rows: max-content 1fr;
     flex-direction: column;
-
     border-right-style: solid;
     border-right-color: gray;
     border-width: 1.5px;
+ 
     & h3 {
         grid-row: 1/2;
         grid-column: 1/2;
@@ -27,12 +27,14 @@
     border-bottom-color: $color-gray;
     border-width: 1.5px;
     position: relative;
+    overflow: visible;
 }
 
 .icons {
     grid-row: 1/2;
     grid-column: 2/3;
     justify-self: end;
+    cursor: pointer;
 
     & img {
         margin-left: 1rem;
@@ -75,6 +77,7 @@
     border-width: 1px;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    z-index: 1000;
 
     & input {
         outline: none;
@@ -84,13 +87,14 @@
         padding-bottom: 0.5rem;
         padding-left: 1rem;
         border: none;
+
     }
 
 }
 
 .popup {
     position: absolute;
-    z-index: 100;
+    z-index: 1000000;
     font-size: 1.6rem;
     background-color: white;
     border-style: solid;
@@ -118,8 +122,19 @@
 }
 
 .main {
-    height: 100%;
+    height: fit-content;
     background-color: $color-gray-light;
     padding-top: 1rem;
+    //overflow-y: auto;
+    z-index: 90;
+
 }
+
+.chatlist{
+    height: calc(97.4vh - 80px);
+    overflow-y: auto;
+    margin-right: -20px;
+}
+
+
 
