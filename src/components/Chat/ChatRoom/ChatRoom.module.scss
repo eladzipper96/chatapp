@@ -5,6 +5,7 @@
     flex-direction: column;
     font-size: 1.4rem;
     height: 100vh;
+    margin-right: -2rem; // remove the scroll bar
 }
 
 .topbar {
@@ -19,6 +20,7 @@
     border-bottom-color: $color-gray;
     z-index: 20;
     background-color: white;
+    position: relative;
 }
 
 .topbar_left {
@@ -57,9 +59,50 @@
 
 .topbar_right {
     align-self: center;
+    margin-right: 2rem;
 
     & img {
         cursor: pointer;
+    }
+}
+
+.popup {
+    position: absolute;
+    z-index: 1000000;
+    font-size: 1.5rem;
+    background-color: white;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1.5px;
+    border-color: rgb(204, 204, 204);
+    right: 40px;
+    top: 5rem;
+    & ul {
+        list-style-type: none;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+
+        & li {
+            display: flex;
+            align-items: center;
+            padding-right: 3rem;
+            padding-left: 3rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            width: 200px;
+
+            & span {
+                margin-left: 1rem;
+            }
+        }
+
+        & li:hover {
+            background-color: $color-gray-light;
+        }
+
+        & li:last-child {
+            color: red;
+        }
     }
 }
 
@@ -67,7 +110,7 @@
     margin-top: 1.5rem;
     padding-bottom: 2.25rem;
     padding-left: 4rem;
-    padding-right: 4rem;
+    padding-right: 6rem;
     border-bottom-style: solid;
     border-width: 1.5px;
     border-bottom-color: $color-gray;
@@ -90,7 +133,7 @@
     & img {
         margin-top: 0.75rem;
         position: absolute;
-        right: 45px
+        right: 65px
     }
 }
 
@@ -102,7 +145,13 @@
     overflow-y: auto;
 }
 .chat_container_translate {
-    transform: translateY(-70px);
+    transform: translateY(-66px);
+    transition-duration: 0.5s;
+}
+
+.chat_container_translatedown {
+    transform: translateY(0);
+    transition-duration: 0.5s;
 }
 
 .chatbox {

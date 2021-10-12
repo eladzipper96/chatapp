@@ -16,6 +16,7 @@
     border-style: solid;
     border-color: $color-gray;
     border-width: 1.5px;
+    cursor: pointer;
 
     &:hover {
         border-color: $color-primary; 

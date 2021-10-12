@@ -4,12 +4,16 @@
     display: flex;
     flex-direction: column;
     margin-top: 3rem;
-    margin-right: 5rem;
-    margin-left: 5rem;
     align-items: center;
+    height: 100%;
+    margin-right: 3rem;
+    margin-left: 3rem;
+
 }
 
 .top {
+    
+    height: 262.5px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: min-content min-content min-content;
@@ -47,10 +51,19 @@
     }
 }
 
+.scroll {
+    overflow-y: scroll;
+    width: 100%;
+    height: 68vh;
+    margin-left: 5rem;
+    padding-right: 3rem;
+}
+
 .info {
     width: 100%;
     margin-top: 2rem;
     font-size: 1.6rem;
+    
 }
 
 .item {

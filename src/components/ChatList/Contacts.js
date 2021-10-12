@@ -1,62 +1,37 @@
 import classes from './Contacts.module.scss'
 import ChatItem from "./ChatItem/ChatItem";
 
-const Friends = () => {
+import { useSelector } from 'react-redux';
 
-    const contactslist = [{
-        name: 'Elad Zipper',
-        location: 'Tel Aviv, Israel'
-    },
-    {
-        name: 'Alon Haramtai',
-        location: 'Petah Tikva, Tel Aviv'
-    },
-    {
-        name: 'Moshik Ben Lulu',
-        location: 'Jerusalem, Tel Aviv'
-    },
-    {
-        name: 'Tamir Moshe',
-        location: 'Haifa, Israel'
-    },
-    {
-        name: 'Tamir Goldstein',
-        location: 'Ramat Gan, Tel Aviv'
-    },
-    {
-        name: 'Tomer Bergman',
-        location: 'Ashkelon, Tel Aviv'
-    },
-    {
-        name: 'Tom Levinsky',
-        location: 'Nesher, Tel Aviv'
-    }]
+const Friends = () => {  
 
-    const final_list = contactslist.sort((a,b) => {
+    const firstlist = useSelector(state => state.user.contacts)
+    const secondlist = [...firstlist] // fix a bug of trying change readonly array
+    const FinalList = secondlist.sort((a,b) => {
         return a.name.charCodeAt(0) - b.name.charCodeAt(0)
     })
 
 
     return (
         <div>
-            {final_list.map((item,index) => {
+            {FinalList.map((item,index) => {
                 if(index===0) {
                     return (
                         <>
                         <div className={classes.letter}>{item.name.substring(0,1)}</div>
-                        <ChatItem key={index} name={item.name} time=' ' msg={item.location} contacts={true}></ChatItem>
+                        <ChatItem key={item.name} name={item.name} time=' ' msg={item.address} contacts={true} id={item.id}></ChatItem>
                         </>
                     )  
                 }
-                if(item.name.charCodeAt(0) !== final_list[index-1].name.charCodeAt(0)) {
+                if(item.name.charCodeAt(0) !== FinalList[index-1].name.charCodeAt(0)) {
                     return (
                         <>
                         <div className={classes.letter}>{item.name.substring(0,1)}</div>
-                        <ChatItem key={index} name={item.name} time=' ' msg={item.location} contacts={true}></ChatItem>
+                        <ChatItem key={item.name} name={item.name} time=' ' msg={item.address} contacts={true} id={item.id}></ChatItem>
                         </>
                     )
                 }
-                return <ChatItem key={index} name={item.name} time=' ' msg={item.location} contacts={true}></ChatItem>
+                return <ChatItem key={item.name} name={item.name} time=' ' msg={item.address} contacts={true} id={item.id}></ChatItem>
             })}
         </div>
     )

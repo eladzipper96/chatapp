@@ -13,12 +13,17 @@ import twitter from '../../assets/twitter.svg'
 import instagram from '../../assets/instagram.svg'
 import linkedin from '../../assets/linkedin.svg'
 
+import { useSelector } from 'react-redux'
+
 const ContactInfo = () => {
+
+    const user = useSelector(state => state.user)
+
     return (
         <div className={classes.container}>
             <div className={classes.top}>
                 <img src={profilepicture} alt='profile'></img>
-                <div className={classes.name}>Adam Adamstein</div>
+                <div className={classes.name}>{user.name}</div>
                 <div className={classes.logout}>
                     <img src={logout} alt='logout'></img>
                     <div>Logout</div>
@@ -32,28 +37,28 @@ const ContactInfo = () => {
                     <img className={classes.icon} src={time} alt="time"></img>
                 </div>
                 <div className={classes.item}>
-                    <div className={classes.subject}>Date</div>
-                    <div className={classes.value}>20/12/1996</div>
+                    <div className={classes.subject}>Birth Date</div>
+                    <div className={classes.value}>{user.birthday}</div>
                     <img className={classes.icon} src={date} alt="date"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Phone Number</div>
-                    <div className={classes.value}>+972-12345678</div>
+                    <div className={classes.value}>{user.phone}</div>
                     <img className={classes.icon} src={phone} alt="phone"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Email</div>
-                    <div className={classes.value}>email@mail.com</div>
+                    <div className={classes.value}>{user.email}</div>
                     <img className={classes.icon} src={email} alt="email"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Website</div>
-                    <div className={classes.value}>www.example.com</div>
+                    <div className={classes.value}>{user.website}</div>
                     <img className={classes.icon} src={website} alt="website"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Address</div>
-                    <div className={classes.value}>Zabotinsky 32, Ramat Gan</div>
+                    <div className={classes.value}>{user.address}</div>
                     <img className={classes.icon} src={house} alt="address"></img>
                 </div>
 
@@ -62,22 +67,22 @@ const ContactInfo = () => {
             <div className={classes.info}>
                 <div className={classes.item}>
                         <div className={classes.subject}>Facebook</div>
-                        <div className={classes.value}>@bla.bla</div>
+                        <div className={classes.value}>{user.facebook}</div>
                         <img className={classes.icon} src={facebook} alt="facebook"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Twitter</div>
-                        <div className={classes.value}>@bla.bla</div>
+                        <div className={classes.value}>{user.twitter}</div>
                         <img className={classes.icon} src={twitter} alt="twitter"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Instagram</div>
-                        <div className={classes.value}>@bla.bla</div>
+                        <div className={classes.value}>{user.instagram}</div>
                         <img className={classes.icon} src={instagram} alt="instagram"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Linkedin</div>
-                        <div className={classes.value}>@bla.bla</div>
+                        <div className={classes.value}>{user.linkedin}</div>
                         <img className={classes.icon} src={linkedin} alt="linkedin"></img>
                 </div>
             </div>

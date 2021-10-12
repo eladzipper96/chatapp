@@ -88,15 +88,15 @@ const UserInfoEdit = () => {
                     <div>{'Update personal & contact information'}</div>
                </div> 
                <div className={classes.inputs}>
-                    <div className={classes.input}>
+                    <div className={[classes.input,classes.cur_pass].join(' ')}>
                         <label>Current Password</label>
                         <input></input>
                     </div>
-                    <div className={classes.input}>
+                    <div className={[classes.input,classes.new_pass].join(' ')}>
                         <label>New Password</label>
                         <input></input>
                     </div>
-                    <div className={classes.input}>
+                    <div className={[classes.input,classes.rep_pass].join(' ')}>
                         <label>Repeat Passworrd</label>
                         <input></input>
                     </div>

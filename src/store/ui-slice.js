@@ -5,6 +5,7 @@ const uiSlice = createSlice({
     initialState: {
         page: "Chats",
         chatId: "",
+        SelectedContact: ""
     },
     reducers: {
         SetPage(state, action) {
@@ -12,7 +13,11 @@ const uiSlice = createSlice({
         },
         setChatId(state, action) {
             state.chatId = action.payload
+        },
+        setSelectedContact(state, action) {
+            state.SelectedContact = action.payload
         }
+
     }
 })
 export const uiActions = uiSlice.actions

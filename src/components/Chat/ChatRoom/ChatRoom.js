@@ -5,6 +5,9 @@ import dots from '../../../assets/dots.svg'
 import dotsblack from '../../../assets/dots_black.svg'
 import emoji from '../../../assets/emoji.svg'
 import arrowright from '../../../assets/arrowright.svg'
+import info from '../../../assets/info.svg'
+import trashcan from '../../../assets/delete.svg'
+import block from '../../../assets/block.svg'
 
 import ChatDialog from './ChatDialog'
 
@@ -12,6 +15,7 @@ import { useState } from 'react'
 
 const ChatRoom = () => {
 
+    const [showPopUp, setShowPopUp] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
     const [inputValue, setInputValue] = useState("")
 
@@ -26,17 +30,36 @@ const ChatRoom = () => {
                 <div className={classes.time}>Last Seen: 15:50</div>
             </div>
             <div className={classes.topbar_right}>
-                <img src={dots} alt="options"></img>
                 <img src={search} alt='search' onClick={()=> setShowSearch(val => !val)}></img>
-            </div>
+                <img src={!showPopUp ? dots : dotsblack} alt="options" onClick={()=> setShowPopUp(val => !val)}></img>
+            </div>           
+
         </div>
+
+        {showPopUp &&
+            <div className={classes.popup}>
+                <ul>
+                    <li>
+                        <img src={info} alt={'info'}></img>
+                        <span>View Info</span> 
+                    </li>
+                    <li>
+                        <img src={trashcan} alt={'info'}></img>
+                        <span>Delete</span> 
+                    </li>
+                    <li>
+                        <img src={block} alt={'info'}></img>
+                        <span>Block</span> 
+                    </li>
+                </ul>
+            </div> }
 
         <div className={classes.search}>
             <input placeholder='Search'></input>
             <img src={search} alt='search'></img>
         </div>
 
-        <div className={!showSearch ? classes.chat_container : [classes.chat_container,classes.chat_container_translate].join(' ')}>
+        <div className={!showSearch ? [classes.chat_container,classes.chat_container_translatedown].join(' ') : [classes.chat_container,classes.chat_container_translate].join(' ')}>
             <div className={classes.chatbox}>
                 <ChatDialog owner={'user'}/>
                 <ChatDialog owner={'friend'}/>

@@ -3,9 +3,23 @@ import profile_picture from '../../../assets/profilepicture.jpg'
 import avatar from '../../../assets/avatar.jpg'
 import location from '../../../assets/location.svg'
 
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { uiActions } from '../../../store/ui-slice';
+
 const ChatItem = (props) => {
+
+    const dispatch = useDispatch();
+    const page = useSelector(state => state.ui.page)
+
+    const ClickHandler = () => {
+        if(page==='Contacts') {
+            dispatch(uiActions.setSelectedContact(props.id))
+        }
+    }
+
     return (
-        <div className={classes.container}>
+        <div className={classes.container} onClick={ClickHandler}>
             <div className={classes.image_container}>
                 <img src={avatar} alt="profile"></img>
             </div>
