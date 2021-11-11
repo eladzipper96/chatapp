@@ -1,5 +1,4 @@
 import classes from './ChatDialog.module.scss';
-import avatar from '../../../assets/avatar.jpg'
 
 const ChatDialog = (props) => {
     var MainClass = [classes.main]
@@ -23,12 +22,12 @@ const ChatDialog = (props) => {
         <div className={MainClass.join(' ')}>
             <div className={ContainerClass.join(' ')}>
                 <p>
-                Pictures will keep your audience from being bored. In order for you to succeed, you need to keep them interested and involved.
+                {props.msg}
                 </p>
             </div>
-            <div className={TimeClass.join(' ')}>12:00am</div>
+            <div className={TimeClass.join(' ')}>{props.time}</div>
             <div className={PictureClass.join(' ')}>
-                    <img src={avatar} alt='pic'></img>
+                    <img src={props.photo} alt='pic'></img>
             </div>
         </div>
 

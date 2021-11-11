@@ -6,6 +6,7 @@
     font-size: 1.4rem;
     height: 100vh;
     margin-right: -2rem; // remove the scroll bar
+    position: relative;
 }
 
 .topbar {
@@ -128,6 +129,7 @@
         border-width: 1.5px;
         border-radius: 5px;
         border-color: $color-gray;
+
     }
 
     & img {
@@ -143,15 +145,18 @@
     font-size: 2rem;
     z-index: 30;
     overflow-y: auto;
+    
 }
 .chat_container_translate {
     transform: translateY(-66px);
     transition-duration: 0.5s;
+    height: calc(70vh + 66px);
 }
 
 .chat_container_translatedown {
     transform: translateY(0);
     transition-duration: 0.5s;
+    height: 70vh;
 }
 
 .chatbox {
@@ -162,6 +167,7 @@
 }
 
 .input_container {
+    width: 100%;
     margin-top: 2rem;
     padding-bottom: 4rem;
     padding-left: 4rem;
@@ -169,6 +175,9 @@
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 90% 2% 8%;
+    position: absolute;
+    bottom: 5px;
+    z-index: 1000000;
 
     & input {
         font-size: 1.4rem;

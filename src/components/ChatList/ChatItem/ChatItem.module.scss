@@ -62,3 +62,18 @@
         align-self: flex-end;
     }
 }
+
+.unread {
+    grid-row: 2/3;
+    grid-column: 3/4;
+    align-self: flex-end;
+    justify-self: end;
+    width: 20px;
+    height: 20px;
+    background-color: $color-primary;
+    color:white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

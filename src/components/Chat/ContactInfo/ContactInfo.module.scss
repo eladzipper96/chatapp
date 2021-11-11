@@ -25,6 +25,12 @@
     border-radius: 5px;
 }
 
+.photo {
+    margin-top: 1rem;
+    width: 140px;
+    height: 140px;
+}
+
 .name {
     font-size: 2rem;
     font-weight: bolder;
@@ -33,12 +39,16 @@
 
 }
 
+.icons {
+    display: flex;
+}
+
 .sendmsg {
     display: flex;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     background-color: $color-primary;
     border-radius: 50%;
     justify-content: center;
@@ -49,6 +59,16 @@
         width: 28px;
         height: 28px;
     }
+}
+
+.block {
+    background-color: red !important;
+    margin-right: 1rem;
+}
+
+.unblock {
+    background-color: rgb(145, 238, 145) !important;
+    margin-right: 1rem;
 }
 
 .scroll {

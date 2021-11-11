@@ -1,6 +1,5 @@
 import classes from './UserInfo.module.scss'
 
-import profilepicture from '../../assets/profilepicture.jpg'
 import logout from '../../assets/logout.svg'
 import time from '../../assets/time.svg'
 import date from '../../assets/date.svg'
@@ -18,11 +17,15 @@ import { useSelector } from 'react-redux'
 const ContactInfo = () => {
 
     const user = useSelector(state => state.user)
+    const tempdate = new Date()
+    const localtime = `${tempdate.getHours()}:${tempdate.getMinutes()}`
 
     return (
         <div className={classes.container}>
             <div className={classes.top}>
-                <img src={profilepicture} alt='profile'></img>
+                <div className={classes.imgcontainer}>
+                    <img src={user.profile_picture} alt='profile' ></img>
+                </div>
                 <div className={classes.name}>{user.name}</div>
                 <div className={classes.logout}>
                     <img src={logout} alt='logout'></img>
@@ -33,12 +36,12 @@ const ContactInfo = () => {
             <div className={classes.info}>
                 <div className={classes.item}>
                     <div className={classes.subject}>Local Time</div>
-                    <div className={classes.value}>13:23 PM</div>
+                    <div className={classes.value}>{localtime}</div>
                     <img className={classes.icon} src={time} alt="time"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Birth Date</div>
-                    <div className={classes.value}>{user.birthday}</div>
+                    <div className={classes.value}>{user.birthday.substring(0,10)}</div>
                     <img className={classes.icon} src={date} alt="date"></img>
                 </div>
                 <div className={classes.item}>

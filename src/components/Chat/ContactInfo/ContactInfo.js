@@ -1,6 +1,6 @@
 import classes from './ContactInfo.module.scss'
 
-import profilepicture from '../../../assets/profilepicture.jpg'
+import block from '../../../assets/block_white.svg'
 import sendmsg from '../../../assets/sendmsg.svg'
 import time from '../../../assets/time.svg'
 import date from '../../../assets/date.svg'
@@ -13,27 +13,47 @@ import twitter from '../../../assets/twitter.svg'
 import instagram from '../../../assets/instagram.svg'
 import linkedin from '../../../assets/linkedin.svg'
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { uiActions } from '../../../store/ui-slice'
 
 const ContactInfo = () => {
 
-    const index = useSelector(state => state.ui.SelectedContact)
-    const contacts_array = useSelector(state => state.user.contacts)
+    const dispatch = useDispatch();
 
-    const temp = contacts_array.filter(item => item.id === index)
+    //const photo = useSelector(state => state.ui.contactPhoto)
+    const selected_id = useSelector(state => state.ui.SelectedContact)
+    const contacts_array = useSelector(state => state.user.contacts)
+    const chats_array = useSelector(state => state.user.chats)
+
+
+    const temp = contacts_array.filter(item => item.id === selected_id)
     const contact = temp[0];
 
-    console.log(contact)
+    const temp_2 = chats_array.filter(item => item.owners.includes(contact.id))
+    const chatid = temp_2[0].id
 
+    const msgButtonHandler = () => {
+        dispatch(uiActions.SetPage('Chats'))
+        dispatch(uiActions.setContactName(contact.name))
+        dispatch(uiActions.setContactPhoto(contact.profile_picture))
+        dispatch(uiActions.setChatId(chatid))
+    }
 
     return (
         <div className={classes.container}>
             <div className={classes.top}>
-                <img src={profilepicture} alt='profile'></img>
+                <img className={classes.photo} src={contact.profile_picture} alt='profile'></img>
                 <div className={classes.name}>{contact.name}</div>
-                <div className={classes.sendmsg}>
-                    <img src={sendmsg} alt='send message'></img>
+                <div className={classes.icons}>
+                    <div className={[classes.sendmsg,classes.block].join(' ')} onClick={msgButtonHandler}>
+                        <img src={block} alt='send message' ></img>
+                    </div>
+                    <div className={classes.sendmsg} onClick={msgButtonHandler}>
+                        <img src={sendmsg} alt='send message' ></img>
+                    </div>
                 </div>
+
+                
             </div>
 
             <div className={classes.scroll}>           
@@ -46,7 +66,7 @@ const ContactInfo = () => {
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Birth Date</div>
-                    <div className={classes.value}>{contact.birthday}</div>
+                    <div className={classes.value}>{contact.birthday.substring(0,10)}</div>
                     <img className={classes.icon} src={date} alt="date"></img>
                 </div>
                 <div className={classes.item}>
