@@ -112,8 +112,6 @@ const userSlice = createSlice({
         },
         updateChat(state, action) {
             state.chats = action.payload;
-            console.log("new chat:")
-            console.log(action.payload)
         }
 
     }

@@ -33,6 +33,7 @@ const Login = (props) => {
                 
                 const temp = res[0].chats.map((chat) => {
                     const socket = io('http://localhost:5000', {query:`chatid=${chat.id}`})
+
                     return {
                         ...chat,
                         socket: socket

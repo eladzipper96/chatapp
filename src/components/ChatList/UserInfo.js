@@ -14,11 +14,15 @@ import linkedin from '../../assets/linkedin.svg'
 
 import { useSelector } from 'react-redux'
 
-const ContactInfo = () => {
+const ContactInfo = (props) => {
 
     const user = useSelector(state => state.user)
     const tempdate = new Date()
     const localtime = `${tempdate.getHours()}:${tempdate.getMinutes()}`
+
+    const logoutHandler = () => {
+        props.setLoggedIn(false)
+    }
 
     return (
         <div className={classes.container}>
@@ -26,8 +30,8 @@ const ContactInfo = () => {
                 <div className={classes.imgcontainer}>
                     <img src={user.profile_picture} alt='profile' ></img>
                 </div>
-                <div className={classes.name}>{user.name}</div>
-                <div className={classes.logout}>
+                <div className={classes.name}>{user.name+" "+user.last_name}</div>
+                <div className={classes.logout} onClick={logoutHandler}>
                     <img src={logout} alt='logout'></img>
                     <div>Logout</div>
                 </div>

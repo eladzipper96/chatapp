@@ -1,5 +1,4 @@
 import classes from './ChatRoom.module.scss';
-import avatar from '../../../assets/avatar.jpg'
 import search from '../../../assets/search.svg'
 import dots from '../../../assets/dots.svg'
 import dotsblack from '../../../assets/dots_black.svg'
@@ -11,6 +10,7 @@ import block from '../../../assets/block.svg'
 import io from 'socket.io-client'
 import ChatDialog from './ChatDialog'
 import {userActions} from '../../../store/user-slice'
+import { uiActions } from '../../../store/ui-slice';
 import { useState, useEffect ,useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -24,6 +24,7 @@ const ChatRoom = (props) => {
     const userID = useSelector(state => state.user.id)
     const userPhoto = useSelector(state => state.user.profile_picture)
     const chatId = useSelector(state => state.ui.chatId)
+    const contactId = useSelector(state => state.ui.contactId)
     const chatArray = useSelector(state => state.user.chats)
     const contactName = useSelector(state => state.ui.contactName)
     const contactPhoto = useSelector(state => state.ui.contactPhoto)
@@ -31,50 +32,69 @@ const ChatRoom = (props) => {
     const messagesEndRef = useRef(null)
     const dispatch = useDispatch()
 
+    
+
     useEffect(() => {
         if(chatId.length>2) { /// this is TEMP!!!!!!!!!
-            
 
                 const temp = chatArray.filter(item => item.id === chatId)
-                setChat(temp[0].content)
-             
-            scrollToBottom()
+                if(temp.length>0) {
+                    setChat(temp[0].content) 
+                }   
+            
         }
+        scrollToBottom()
     },[chatId,chatArray,Chat])
 
     props.socket.on('message', (obj) => {
-        console.log("---inside the socket.on ----")
+        console.log(chatId)
         if(obj.author !== userID) {
-            //console.log(obj.value)
             //Chat = [...Chat, {author: obj.author, value: obj.value}]
-            setChat(chat => {
-                if(chat[chat.length-1].id !== obj.id) {
-                    updateLastMessage(new Date(),undefined,obj)
-                    return [...chat,{author: obj.author, value: obj.value, id: obj.id, time:obj.time}]
-                }
-                else {
-                    return [...chat]
-                }
-            })
+            //updateLastMessage(new Date(),undefined,obj)
+            recievemsgHandler(obj)
+
         }
+        //recievemsgHandler(obj)
     })
+
+    const recievemsgHandler = (obj) => {
+        var temparr = chatArray.map(chat => {
+            var temp;
+
+            if(obj.chatid === chat.id) {
+                temp = [...chat.content, {author: obj.other, value: obj.value, time: obj.time, id:obj.id, read:false}]
+
+                return {
+                    content: temp,
+                    id: chat.id,
+                    owners: chat.owners,
+                    socket: chat.socket
+                }
+            }
+            else return chat     
+        })
+        dispatch(userActions.updateChat(temparr))
+    }
+
 
     const updateLastMessage = (date,minutes,values) => {
         var temparr = chatArray.map((item) => { 
             var temp;
+            
             if(item.id === chatId) {
+
                 if(values) { // you get values only when your contact send message
-                    temp = [...item.content, {author: values.id, value: values.value, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: false}]
+                    console.log("the mesg read = false")
+                    temp = [...item.content, {author: values.author, value: values.value, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: false}]  
                 }
                 if(!values) {
-                    temp = [...item.content, {author: userID, value: inputValue, time: `${date.getHours()}:${minutes}`, read: true}]
+                    temp = [...item.content, {author: userID, value: inputValue, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: true}]
                 }
-
-
                 return {
                         content: temp,
                         id: item.id,
-                        owners: item.owners
+                        owners: item.owners,
+                        socket: item.socket
                     }
                 }
             else {
@@ -100,15 +120,37 @@ const ChatRoom = (props) => {
                 minutes = `0${date.getMinutes()}`
             }
 
-            props.socket.emit('message', {author: userID, value: inputValue, id:`${Math.floor(Math.random() * 10000)}`, time: `${date.getHours()}:${date.getMinutes()}`})
+            props.socket.emit('message', {author: userID, value: inputValue, id:`${Math.floor(Math.random() * 10000)}`, time: `${date.getHours()}:${date.getMinutes()}`, chatid: chatId})
 
-            setChat(chat => [...chat,{author: userID, value: inputValue, time: `${date.getHours()}:${minutes}`}])
+            //setChat(chat => [...chat,{author: userID, value: inputValue, time: `${date.getHours()}:${minutes}`, chatid: chatId}])
 
             updateLastMessage(date,minutes)
 
             setInputValue('')
         }
     }
+
+    const viewInfo = () => {
+        dispatch(uiActions.SetPage('Contacts'))
+    }
+
+    const deleteChat = () => {
+        const temp = chatArray.filter((chat,index) => {
+            if(chat.id !== chatId) {
+                return chat
+            }
+
+        })
+
+        dispatch(uiActions.setShowChats(false))
+        if(temp.length>0) {
+            dispatch(uiActions.setChatId(temp[0].id))
+            // here i need to add more actions
+        }
+        //console.log(temp)
+        dispatch(userActions.updateChat(temp))
+    }
+
 
     return (
     <div className={classes.container}>
@@ -130,11 +172,11 @@ const ChatRoom = (props) => {
         {showPopUp &&
             <div className={classes.popup}>
                 <ul>
-                    <li>
+                    <li onClick={viewInfo}>
                         <img src={info} alt={'info'}></img>
                         <span>View Info</span> 
                     </li>
-                    <li>
+                    <li onClick={deleteChat}>
                         <img src={trashcan} alt={'info'}></img>
                         <span>Delete</span> 
                     </li>

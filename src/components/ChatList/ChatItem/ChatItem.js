@@ -5,12 +5,15 @@ import {useState, useEffect} from 'react'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { uiActions } from '../../../store/ui-slice';
+import { userActions } from '../../../store/user-slice';
 
 const ChatItem = (props) => {
 
     const dispatch = useDispatch();
     const page = useSelector(state => state.ui.page)
+    const chats = useSelector(state => state.user.chats)
     const [unread, setUnread] = useState(0)
+
 
     useEffect(()=> {
         if(props.unread) {
@@ -25,11 +28,36 @@ const ChatItem = (props) => {
         }
 
         if(page==='Chats') {
+           
             dispatch(uiActions.setChatId(props.chatid))
             dispatch(uiActions.setContactName(props.name))
             dispatch(uiActions.setContactPhoto(props.photo))
+            dispatch(uiActions.setContactId(props.contactid))
+            dispatch(uiActions.setShowChats(true))
             setUnread(0)
+            resetNewMessages()
         }
+    }
+
+    const resetNewMessages = () => {
+        console.log("reseting the chat")
+        const temp = chats.map(chat => {
+            if(chat.id === props.chatid) {
+                const arr = chat.content.map(msg => {
+                    return {
+                        ...msg,
+                        read: true
+                    }
+                })
+                return {
+                    ...chat,
+                    content: arr
+                }
+            }
+            else return chat
+        })
+
+        dispatch(userActions.updateChat(temp))
     }
 
     return (

@@ -13,36 +13,16 @@ import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 
 
-const ChatList = () => {
+const ChatList = (props) => {
 
     const [showDetails, setShowDetails] = useState(false)
     const [searchValue, setSearchValue] = useState('')
     const header = useSelector(state => state.ui.page)
     const USERID = useSelector(state => state.user.id)
+    const chatId = useSelector(state => state.ui.chatId)
     const _contactlist = useSelector(state => state.user.contacts)
-    //const _activeChats = useSelector(state => state.user.activeChats)
-    const _chats = useSelector(state => state.user.chats)
-    var unread = 0;
-   // let activeChats = [..._activeChats]
-   // let chats = [..._chats]
-    //let AllContacts = [..._contactlist]
+    const _chats = useSelector(state => state.user.chats);
 
-    useEffect(()=> {
-
-        //chats = chats.sort((a,b) => {
-            //return a.chatid.charCodeAt(0) -  b.chatid.charCodeAt(0)
-        //})
-
-        //allChats = allChats.sort((a,b) => {
-           // return a.chatid.charCodeAt(0) -  b.chatid.charCodeAt(0)
-       // })
-
-        //AllContacts = AllContacts.sort((a,b) => {
-            //return a.room.charCodeAt(0) -  b.room.charCodeAt(0)
-       // })
-
-
-    },[_chats])
 
 
     return (
@@ -52,7 +32,7 @@ const ChatList = () => {
             <h3>{header}</h3>
             <div className={classes.icons}>
                 <img src={addFriend} alt='add'></img>
-                <img src={bell} alt="Notifcations"></img>
+                <img src={bell} alt="Notifcations" ></img>
                 <img src={showDetails ? dots_black : dots} alt="Details" onClick={() => setShowDetails(val => !val)}></img>
             </div>
             <div className={classes.select}>
@@ -81,6 +61,7 @@ const ChatList = () => {
 
         </div>
 
+
         <div className={classes.main}>
             <div className={classes.chatlist}>
                 {(header === '' || header === 'Chats') && 
@@ -89,19 +70,18 @@ const ChatList = () => {
                     var name;
                     var last_seen;
                     var profile_picture;
-                    //var unread = 0;
+                    var contactid;
+                    var unread = 0;
                     item.content.forEach(val => {
                         if(val.read === false) {
-                            if(val.author !== USERID) {
+                            if(val.author !== USERID && chatId !== item.id) {
                                 unread++
                             }
                         }
                     })
 
-                    console.log(unread)
-                    console.log('-----------')
-
                     if(item.owners[0] === USERID) {
+                        contactid = item.owners[1]
                         _contactlist.forEach(val => {
                             if(item.owners[1] === val.id) {
                                 name = val.name+" "+val.last_name
@@ -112,6 +92,7 @@ const ChatList = () => {
                     }
 
                     if(item.owners[1] === USERID) {
+                        contactid = item.owners[0]
                         _contactlist.forEach(val => {
                             if(item.owners[0] === val.id) {
                                 name = val.name+" "+val.last_name
@@ -120,19 +101,19 @@ const ChatList = () => {
                             }
                         });
                     }
-
+                    console.log(unread)
                     if(name.toLowerCase().includes(searchValue.toLowerCase())) { // Handle Search
                         return <ChatItem key={name} 
                         name={name} time={item.content[length].time} 
                         msg={item.content[length].author===USERID ? `Me: ${item.content[length].value}` : `${name.split(' ')[0]}: ${item.content[length].value}`} 
-                        chatid={item.id} photo={profile_picture} unread={unread}/>
+                        chatid={item.id} photo={profile_picture} unread={unread} contactid={contactid}/>
                     }
 
                 }) }
             
                 {header === 'Contacts' && <Contacts />}
 
-                {header === 'Profile' && <UserInfo />}
+                {header === 'Profile' && <UserInfo setLoggedIn={props.setLoggedIn} />}
             </div>
         </div>
 

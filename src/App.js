@@ -3,7 +3,6 @@ import NavBar from './components/NavBar/NavBar';
 import Chat from './components/Chat/Chat'
 import ChatList from './components/ChatList/ChatList'
 import Login from './components/Login/Login'
-
 import { useEffect, useState } from 'react';
 
 function App() {
@@ -12,7 +11,8 @@ function App() {
 
   useEffect(() => {
     if(LoggedIn===true) {
-      
+
+
     }
   },[LoggedIn])
 
@@ -22,10 +22,10 @@ function App() {
      <div>
        <Login setlogin={setLoggedIn}/>
     </div>}
-    {LoggedIn &&
+    {LoggedIn && 
         <div className='app'>
         <NavBar />
-        <ChatList />
+        <ChatList setLoggedIn={setLoggedIn} />
         <Chat/>
       </div>
     }

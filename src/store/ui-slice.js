@@ -6,8 +6,10 @@ const uiSlice = createSlice({
         page: "Chats", // acts as a router
         chatId: "a", // tells which chat to render
         contactName: 'NEED 2 DO!!!!',
+        contactId: 0,
         contactPhoto: '',
         SelectedContact: "",// tells which contanct to display
+        showChats: false
 
     },
     reducers: {
@@ -26,6 +28,12 @@ const uiSlice = createSlice({
         setContactPhoto(state, action) {
             state.contactPhoto = action.payload
         },
+        setContactId(state, action) {
+            state.contactId = action.payload
+        },
+        setShowChats(state, action) {
+            state.showChats = action.payload
+        }
 
     }
 })

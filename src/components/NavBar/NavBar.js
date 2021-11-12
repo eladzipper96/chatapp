@@ -3,14 +3,17 @@ import icon from '../../assets/chaticon.svg'
 import chat from '../../assets/chaticon_nav.svg'
 import friends from '../../assets/friends.svg'
 import profile from '../../assets/profile.svg'
+import io from 'socket.io-client'
 
-
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
 
 const NavBar = () => {
     
     const dispatch = useDispatch()
+    const USERID = useSelector(state => state.user.id)
+    const socket = io('http://localhost:5000', {query:`chatid=${USERID}`})
+
 
     return (
     <div className={classes.main}>

@@ -27,11 +27,11 @@ const Friends = () => {
                     return (
                         <>
                         <div className={classes.letter}>{item.name.substring(0,1)}</div>
-                        <ChatItem key={item.name} name={item.name} time=' ' msg={item.address} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
+                        <ChatItem key={item.name} name={item.name+" "+item.last_name} time=' ' msg={item.address} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
                         </>
                     )
                 }
-                return <ChatItem key={item.name} name={item.name} time=' ' msg={item.address} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
+                return <ChatItem key={item.name} name={item.name+" "+item.last_name} time=' ' msg={item.address} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
             })}
         </div>
     )

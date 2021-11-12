@@ -25,16 +25,21 @@ const ContactInfo = () => {
     const contacts_array = useSelector(state => state.user.contacts)
     const chats_array = useSelector(state => state.user.chats)
 
+    var contact;
+    var chatid;
 
     const temp = contacts_array.filter(item => item.id === selected_id)
-    const contact = temp[0];
+   contact = temp[0];
 
     const temp_2 = chats_array.filter(item => item.owners.includes(contact.id))
-    const chatid = temp_2[0].id
+    if(temp_2.length>0) {
+        chatid = temp_2[0].id
+    }
+    
 
     const msgButtonHandler = () => {
         dispatch(uiActions.SetPage('Chats'))
-        dispatch(uiActions.setContactName(contact.name))
+        dispatch(uiActions.setContactName(contact.name+" "+contact.last_name))
         dispatch(uiActions.setContactPhoto(contact.profile_picture))
         dispatch(uiActions.setChatId(chatid))
     }
@@ -43,7 +48,7 @@ const ContactInfo = () => {
         <div className={classes.container}>
             <div className={classes.top}>
                 <img className={classes.photo} src={contact.profile_picture} alt='profile'></img>
-                <div className={classes.name}>{contact.name}</div>
+                <div className={classes.name}>{contact.name+" "+contact.last_name}</div>
                 <div className={classes.icons}>
                     <div className={[classes.sendmsg,classes.block].join(' ')} onClick={msgButtonHandler}>
                         <img src={block} alt='send message' ></img>
