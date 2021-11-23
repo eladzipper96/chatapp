@@ -57,9 +57,14 @@
     //justify-self: start;
     align-self: flex-end;
 
-
     & img {
         align-self: flex-end;
+    }
+
+    & div {
+        margin-left: 1rem;
+        font-size: 1.5rem;
+        align-self: center;
     }
 }
 

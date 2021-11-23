@@ -1,5 +1,5 @@
 import classes from './ChatItem.module.scss'
-import location from '../../../assets/location.svg'
+import megaphone from '../../../assets/megaphone.svg'
 
 import {useState, useEffect} from 'react'
 import { useDispatch } from 'react-redux';
@@ -31,7 +31,7 @@ const ChatItem = (props) => {
            
             dispatch(uiActions.setChatId(props.chatid))
             dispatch(uiActions.setContactName(props.name))
-            dispatch(uiActions.setContactPhoto(props.photo))
+            dispatch(uiActions.setChatPhoto(props.photo))
             dispatch(uiActions.setContactId(props.contactid))
             dispatch(uiActions.setShowChats(true))
             setUnread(0)
@@ -77,8 +77,8 @@ const ChatItem = (props) => {
             {unread!==0 && <div className={classes.unread}>{unread}</div>}
             {props.contacts &&
             <div className={classes.msg}>
-                <img src={location} alt="loc"/>
-                {props.msg.substring(0,40)}
+                <img src={megaphone} alt="moto:"/>
+                <div>{props.msg.substring(0,40)}</div>
             </div>}
         </div>
     )

@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/user-slice'
+import { uiActions } from '../../store/ui-slice';
 
 
 const Login = (props) => {
@@ -29,7 +30,6 @@ const Login = (props) => {
         .then(res => {
             if(res.length>0) {
                 dispatch(userActions.SetUser(res[0]))
-                console.log(res[0].chats)
                 
                 const temp = res[0].chats.map((chat) => {
                     const socket = io('http://localhost:5000', {query:`chatid=${chat.id}`})
@@ -40,7 +40,9 @@ const Login = (props) => {
                     }
                 })
 
+                //const controlsocket = io('http://localhost:5000', {query:`chatid=${res[0]._id}`})
                 dispatch(userActions.updateChat(temp))
+                //dispatch(uiActions.setControlSocket(controlsocket))
                 props.setlogin(true)
             }
             if(res.length===0) {

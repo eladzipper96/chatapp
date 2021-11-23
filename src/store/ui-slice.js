@@ -5,11 +5,16 @@ const uiSlice = createSlice({
     initialState: {
         page: "Chats", // acts as a router
         chatId: "a", // tells which chat to render
+        ChatPhoto: '',
         contactName: 'NEED 2 DO!!!!',
         contactId: 0,
         contactPhoto: '',
         SelectedContact: "",// tells which contanct to display
-        showChats: false
+        showChats: false,
+        showNewChat: false,
+        showCreateGroup: false,
+        newNotifcation: false,
+        controlSocket: undefined
 
     },
     reducers: {
@@ -33,6 +38,21 @@ const uiSlice = createSlice({
         },
         setShowChats(state, action) {
             state.showChats = action.payload
+        },
+        setChatPhoto(state, action) {
+            state.ChatPhoto = action.payload
+        },
+        setshowNewChat(state, action) {
+            state.showNewChat = action.payload
+        },
+        setshowCreateGroup(state, action) {
+            state.showCreateGroup = action.payload
+        },
+        setControlSocket(state, action) {
+            state.controlSocket = action.payload
+        },
+        setnewNotifcation(state, action) {
+            state.newNotifcation = action.payload
         }
 
     }

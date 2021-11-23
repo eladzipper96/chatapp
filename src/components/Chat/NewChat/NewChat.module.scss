@@ -1,0 +1,105 @@
+@import '../../../style/variables.scss';
+.newchatcontainer {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Karla', sans-serif;
+    background-color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+
+    h1 {
+        text-align: center;
+        margin-top: 1rem;
+        padding-bottom: 1rem;
+        font-size: 2rem;
+        color: $color-primary
+    }
+
+    h2 {
+        text-align: center;
+        padding-bottom: 1rem;
+        border-bottom-style: solid;
+        border-width: 1px;
+        color: $color-primary-bold
+    }
+}
+
+.newchattop{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    & img {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+}
+
+.overflowcontainer {
+    overflow-y: scroll;
+    padding-right: 5rem;
+    transform: translateX(3rem);
+}
+
+.item {
+    margin-top: 1rem;
+    width: 100%;
+    height: 75px;
+    border-color: $color-gray;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+    border-style: solid;
+    border-width: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:last-child {
+        margin-bottom: 1rem;
+    }
+
+    &:hover {
+        background-color: $color-primary;
+        color: white;
+        border-color: $color-primary;
+    }
+}
+
+.imagecontainer {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 1rem;
+    & img {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.info {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-size: 1.5rem;
+}
+
+.moto {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+}

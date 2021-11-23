@@ -6,13 +6,17 @@ import emoji from '../../../assets/emoji.svg'
 import arrowright from '../../../assets/arrowright.svg'
 import info from '../../../assets/info.svg'
 import trashcan from '../../../assets/delete.svg'
+import addfriend from '../../../assets/add_friend_black.svg'
 import block from '../../../assets/block.svg'
-import io from 'socket.io-client'
+import profilepicture from '../../../assets/profilepicture.jpg'
+import groupprofile from '../../../assets/groupprofile.png'
 import ChatDialog from './ChatDialog'
 import {userActions} from '../../../store/user-slice'
 import { uiActions } from '../../../store/ui-slice';
 import { useState, useEffect ,useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+
+import io from 'socket.io-client'
 
 const ChatRoom = (props) => {
 
@@ -21,40 +25,86 @@ const ChatRoom = (props) => {
     const [inputValue, setInputValue] = useState("")
     const [SearchValue, setSearchValue] = useState('')
     var [Chat, setChat] = useState([])
+    var [ChatType, setChatType] = useState()
+    var [lastSeen, setLastSeen] = useState()
     const userID = useSelector(state => state.user.id)
+    const userName = useSelector(state => state.user.name+" "+state.user.last_name)
     const userPhoto = useSelector(state => state.user.profile_picture)
+    const Contacts = useSelector(state => state.user.contacts)
     const chatId = useSelector(state => state.ui.chatId)
-    const contactId = useSelector(state => state.ui.contactId)
     const chatArray = useSelector(state => state.user.chats)
+    const activeChats = useSelector(state => state.user.activechats)
     const contactName = useSelector(state => state.ui.contactName)
-    const contactPhoto = useSelector(state => state.ui.contactPhoto)
+    const contactPhoto = useSelector(state => state.ui.ChatPhoto)
+    const contactId = useSelector(state => state.ui.contactId)
+    const showChats = useSelector(state => state.ui.showChats)
 
     const messagesEndRef = useRef(null)
     const dispatch = useDispatch()
 
-    
 
     useEffect(() => {
         if(chatId.length>2) { /// this is TEMP!!!!!!!!!
 
                 const temp = chatArray.filter(item => item.id === chatId)
                 if(temp.length>0) {
-                    setChat(temp[0].content) 
-                }   
+                    setChat(temp[0].content)
+                    setChatType(temp[0].type) 
+                }
+                if(lastSeen===undefined) {
+                    const temp_2 = Contacts.filter(item => item.id === contactId)
+                    if(temp_2.length>0) {
+                        setLastSeen(temp_2[0].last_seen)
+                    }
+                }
             
         }
+        setShowPopUp(false)
         scrollToBottom()
     },[chatId,chatArray,Chat])
 
-    props.socket.on('message', (obj) => {
-        console.log(chatId)
-        if(obj.author !== userID) {
-            //Chat = [...Chat, {author: obj.author, value: obj.value}]
-            //updateLastMessage(new Date(),undefined,obj)
-            recievemsgHandler(obj)
-
+    setInterval(() => {
+        var now = new Date()
+        if(ChatType==='friend') {
+            props.socket.emit('lastseen', now)
         }
-        //recievemsgHandler(obj)
+    },30000)
+
+    props.socket.on('message', (obj) => {
+
+        if(!activeChats.includes(obj.chatid)) {
+            dispatch(userActions.updateActiveChats([obj.chatid,...activeChats]))
+        }
+
+        console.log(obj.value)
+        if(obj.author !== userID) {
+            recievemsgHandler(obj)
+        }
+    })
+
+    props.socket.on('newgroup', (obj) => {
+        const socket = io('http://localhost:5000', {query:`chatid=${obj.id}`})
+        dispatch(userActions.updateChat([...chatArray,
+            {
+            socket: socket,
+            content: [],
+            id: obj.id,
+            owners: obj.owners,
+            type: 'group',
+            name: obj.name,
+            picture: groupprofile
+            }]))
+        dispatch(userActions.updateActiveChats([...activeChats,obj.id]))
+        console.log(obj)
+    })
+
+    props.socket.on('lastseen', (time) => {
+        const temptime = new Date()
+        var minutes = temptime.getMinutes()
+
+        if(minutes<10) minutes = `0${temptime.getMinutes()}`
+
+        setLastSeen(`${temptime.getHours()}:${minutes}`)
     })
 
     const recievemsgHandler = (obj) => {
@@ -62,13 +112,16 @@ const ChatRoom = (props) => {
             var temp;
 
             if(obj.chatid === chat.id) {
-                temp = [...chat.content, {author: obj.other, value: obj.value, time: obj.time, id:obj.id, read:false}]
+                temp = [...chat.content, {author: obj.other, authorname: obj.authorname, value: obj.value, time: obj.time, id:obj.id, read:false}]
 
                 return {
                     content: temp,
                     id: chat.id,
                     owners: chat.owners,
-                    socket: chat.socket
+                    type: chat.type,
+                    socket: chat.socket,
+                    name: chat.name || undefined,
+                    picture: chat.picture || undefined
                 }
             }
             else return chat     
@@ -85,16 +138,19 @@ const ChatRoom = (props) => {
 
                 if(values) { // you get values only when your contact send message
                     console.log("the mesg read = false")
-                    temp = [...item.content, {author: values.author, value: values.value, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: false}]  
+                    temp = [...item.content, {author: values.author, authorname: values.authorname, value: values.value, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: false}]  
                 }
                 if(!values) {
-                    temp = [...item.content, {author: userID, value: inputValue, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: true}]
+                    temp = [...item.content, {author: userID, authorname: userName, value: inputValue, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: true}]
                 }
                 return {
                         content: temp,
                         id: item.id,
                         owners: item.owners,
-                        socket: item.socket
+                        socket: item.socket,
+                        type: item.type,
+                        name: item.name || undefined,
+                        picture: item.picture || undefined
                     }
                 }
             else {
@@ -120,7 +176,7 @@ const ChatRoom = (props) => {
                 minutes = `0${date.getMinutes()}`
             }
 
-            props.socket.emit('message', {author: userID, value: inputValue, id:`${Math.floor(Math.random() * 10000)}`, time: `${date.getHours()}:${date.getMinutes()}`, chatid: chatId})
+            props.socket.emit('message', {author: userID, authorname: userName, value: inputValue, id:`${Math.floor(Math.random() * 10000)}`, time: `${date.getHours()}:${minutes}`, chatid: chatId})
 
             //setChat(chat => [...chat,{author: userID, value: inputValue, time: `${date.getHours()}:${minutes}`, chatid: chatId}])
 
@@ -135,20 +191,18 @@ const ChatRoom = (props) => {
     }
 
     const deleteChat = () => {
-        const temp = chatArray.filter((chat,index) => {
-            if(chat.id !== chatId) {
+        const temp = activeChats.filter((chat,index) => {
+            if(chat !== chatId) {
                 return chat
             }
 
         })
-
         dispatch(uiActions.setShowChats(false))
-        if(temp.length>0) {
-            dispatch(uiActions.setChatId(temp[0].id))
-            // here i need to add more actions
-        }
-        //console.log(temp)
-        dispatch(userActions.updateChat(temp))
+        dispatch(userActions.updateActiveChats(temp))
+    }
+
+    if(!showChats) {
+        return <div className={classes.zero}></div>
     }
 
 
@@ -160,10 +214,11 @@ const ChatRoom = (props) => {
                     <img src={contactPhoto} alt={'profile'}></img>
                 </div>
                 <div className={classes.name}>{contactName}</div>
-                <div className={classes.time}>Last Seen: 15:50</div>
+                {ChatType === 'group' && <div className={classes.time}>Group Memebers: Need 2 do</div>}
+                {ChatType === 'friend' && <div className={classes.time}>Last Seen: {lastSeen}</div>}
             </div>
             <div className={classes.topbar_right}>
-                <img src={search} alt='search' onClick={()=> setShowSearch(val => !val)}></img>
+                <img src={search} alt='search' onClick={()=> {setShowSearch(val => !val)}}></img>
                 <img src={!showPopUp ? dots : dotsblack} alt="options" onClick={()=> setShowPopUp(val => !val)}></img>
             </div>           
 
@@ -172,18 +227,26 @@ const ChatRoom = (props) => {
         {showPopUp &&
             <div className={classes.popup}>
                 <ul>
-                    <li onClick={viewInfo}>
+                    {ChatType==='friend' &&
+                        <li onClick={viewInfo}>
                         <img src={info} alt={'info'}></img>
                         <span>View Info</span> 
-                    </li>
+                        </li>}
+                    {ChatType==='group' &&
+                        <li>
+                        <img src={addfriend} alt={'add'}></img>
+                        <span>Add Friend</span> 
+                        </li>}
                     <li onClick={deleteChat}>
                         <img src={trashcan} alt={'info'}></img>
                         <span>Delete</span> 
                     </li>
-                    <li>
-                        <img src={block} alt={'info'}></img>
-                        <span>Block</span> 
-                    </li>
+                    {ChatType==='friend' &&
+                        <li>
+                        <img src={block} alt={'block'}></img>
+                        <span className={classes.textred}>Block</span> 
+                        </li>}
+                    
                 </ul>
             </div> }
 
@@ -196,14 +259,29 @@ const ChatRoom = (props) => {
             <div className={classes.chatbox}>
                 {Chat.map((item, index) => {
                     if(item.value.toLowerCase().includes(SearchValue.toLowerCase())){ // Handle the Search
-                        return <ChatDialog key={index} owner={item.author===userID ? 'user' : 'friend'} msg={item.value} time={item.time}
-                         photo={item.author===userID ? userPhoto : contactPhoto}/>
+                            if(ChatType === 'friend') {
+                                return <ChatDialog key={index} owner={item.author===userID ? 'user' : 'friend'} msg={item.value} time={item.authorname+" "+item.time}
+                                photo={item.author===userID ? userPhoto : contactPhoto}/>
+                            }
+                            if(ChatType === 'group') {
+                                var picture;
+                                Contacts.forEach(con => { // check is author is a friend, if so used his profile picture
+                                    if(con.id === item.author) 
+                                    picture = con.profile_picture
+                                })
+                                if(picture===undefined) { // case author is not a friend
+                                    picture = profilepicture
+                                }
+
+                                return <ChatDialog key={index} owner={item.author===userID ? 'user' : 'friend'} msg={item.value} time={item.authorname+" "+item.time}
+                                photo={item.author===userID ? userPhoto : picture}/>
+                            }
                     }
                 })}
                 <div ref={messagesEndRef} />
             </div>
         </div>
-
+        
         <div className={classes.input_container}>
             <input placeholder="Type your message here..." value={inputValue}
             onChange={(e)=> setInputValue(e.target.value)}></input>

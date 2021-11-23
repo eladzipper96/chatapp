@@ -15,6 +15,7 @@ import linkedin from '../../../assets/linkedin.svg'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { uiActions } from '../../../store/ui-slice'
+import { userActions } from '../../../store/user-slice'
 
 const ContactInfo = () => {
 
@@ -24,6 +25,7 @@ const ContactInfo = () => {
     const selected_id = useSelector(state => state.ui.SelectedContact)
     const contacts_array = useSelector(state => state.user.contacts)
     const chats_array = useSelector(state => state.user.chats)
+    const activeChats = useSelector(state => state.user.activechats)
 
     var contact;
     var chatid;
@@ -32,16 +34,21 @@ const ContactInfo = () => {
    contact = temp[0];
 
     const temp_2 = chats_array.filter(item => item.owners.includes(contact.id))
-    if(temp_2.length>0) {
-        chatid = temp_2[0].id
-    }
+    chatid = temp_2[0].id
+    
     
 
     const msgButtonHandler = () => {
+
+        if(!activeChats.includes(chatid)) {
+            dispatch(userActions.updateActiveChats([chatid,...activeChats]))
+        }
         dispatch(uiActions.SetPage('Chats'))
         dispatch(uiActions.setContactName(contact.name+" "+contact.last_name))
         dispatch(uiActions.setContactPhoto(contact.profile_picture))
+        dispatch(uiActions.setChatPhoto(contact.profile_picture))
         dispatch(uiActions.setChatId(chatid))
+        dispatch(uiActions.setShowChats(true))
     }
 
     return (
