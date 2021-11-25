@@ -2,7 +2,6 @@ import classes from './CreateGroup.module.scss'
 import close from '../../../assets/close.svg'
 import { useSelector, useDispatch } from 'react-redux';
 import { uiActions } from '../../../store/ui-slice';
-import { userActions } from '../../../store/user-slice';
 import { useState } from 'react';
 
 
@@ -18,6 +17,7 @@ const CreateGroup = () => {
 
     const [groupMembers, setGroupMembers] = useState([userID])
     const [groupName, setGroupName] = useState('')
+
 
     const sorted_contacts = temp.sort((a,b) => {
        return a.name.charCodeAt(0) - b.name.charCodeAt(0)

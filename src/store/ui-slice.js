@@ -53,6 +53,9 @@ const uiSlice = createSlice({
         },
         setnewNotifcation(state, action) {
             state.newNotifcation = action.payload
+        },
+        setreloadControl(state, action) {
+            state.reloadControl = action.payload
         }
 
     }

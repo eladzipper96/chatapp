@@ -27,8 +27,8 @@ const ContactInfo = () => {
     const chats_array = useSelector(state => state.user.chats)
     const activeChats = useSelector(state => state.user.activechats)
 
-    var contact;
-    var chatid;
+    var contact = {}
+    var chatid = 1
 
     const temp = contacts_array.filter(item => item.id === selected_id)
    contact = temp[0];
@@ -44,6 +44,7 @@ const ContactInfo = () => {
             dispatch(userActions.updateActiveChats([chatid,...activeChats]))
         }
         dispatch(uiActions.SetPage('Chats'))
+        dispatch(uiActions.setContactId(contact.id))
         dispatch(uiActions.setContactName(contact.name+" "+contact.last_name))
         dispatch(uiActions.setContactPhoto(contact.profile_picture))
         dispatch(uiActions.setChatPhoto(contact.profile_picture))

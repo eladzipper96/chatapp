@@ -31,6 +31,7 @@ const ChatList = (props) => {
 
     const header = useSelector(state => state.ui.page)
     const USERID = useSelector(state => state.user.id)
+    const myUsername = useSelector(state => state.user.username)
     const userName = useSelector(state => state.user.name+" "+state.user.last_name)
     const userPicture = useSelector(state => state.user.profile_picture)
     const chatId = useSelector(state => state.ui.chatId)
@@ -44,10 +45,7 @@ const ChatList = (props) => {
     const now_time = new Date()
     const now_date = now_time.toISOString().substring(0,10)
 
-    console.log(now_date)
-
     const dispatch = useDispatch()
-
 
 
     const addFriendHandler = () => {
@@ -69,6 +67,25 @@ const ChatList = (props) => {
         setShowAddFriend(false)
     }
 
+    const RejectHandler = (obj) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: USERID,
+                type: 'remove',
+                from_id: obj.from_id
+           })
+        }
+
+        const arr = notifications.filter((not) => {
+            return not.from_id !== obj.from_id
+        })
+
+        dispatch(userActions.updateNotifications(arr))
+        fetch('http://localhost:5000/notification', requestOptions).then(console.log('removed notifcation'))
+    }
+
     const AcceptHandler = (obj) => {
 
         const Options = {
@@ -84,6 +101,7 @@ const ChatList = (props) => {
         .then(val => {
             const contact = {
                 name: val.name,
+                username: val.username,
                 last_name: val.last_name,
                 birthday: val.birthday,
                 phone: val.phone,
@@ -119,6 +137,7 @@ const ChatList = (props) => {
                 chatid: val.chatid,
                 owners: val.chatowners,
                 address: userinfo.address,
+                username: userinfo.username,
                 birthday: userinfo.birthday,
                 email: userinfo.email,
                 facebook: userinfo.facebook,
@@ -150,6 +169,16 @@ const ChatList = (props) => {
                 picture: userPicture,
                 time: date,
            })
+        }
+
+        if(friendUsername===myUsername) {
+            alert('You can\'t add yourself')
+            return;
+        }
+
+        if(_contactlist.filter((con) => con.username === friendUsername).length > 0) {
+            alert(`${friendUsername} is already your friend`)
+            return;
         }
 
         if(friendUsername.length>0) {
@@ -263,7 +292,7 @@ const ChatList = (props) => {
                                     <span>{`${val.time.substring(11,16)}, ${val.time.substring(0,10)}`}</span>}
                                 </div>
                                 <div className={classes.notifcations_buttons}>
-                                    <span>Reject</span>
+                                    <span onClick={() => RejectHandler(val)}>Reject</span>
                                     <span onClick={() => AcceptHandler(val)}>Accept</span>
                                 </div>
                                 </>

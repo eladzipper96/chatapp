@@ -51,24 +51,13 @@ const ChatRoom = (props) => {
                     setChat(temp[0].content)
                     setChatType(temp[0].type) 
                 }
-                if(lastSeen===undefined) {
-                    const temp_2 = Contacts.filter(item => item.id === contactId)
-                    if(temp_2.length>0) {
-                        setLastSeen(temp_2[0].last_seen)
-                    }
-                }
+
+                lastSeenHandler()
             
         }
         setShowPopUp(false)
         scrollToBottom()
-    },[chatId,chatArray,Chat])
-
-    setInterval(() => {
-        var now = new Date()
-        if(ChatType==='friend') {
-            props.socket.emit('lastseen', now)
-        }
-    },30000)
+    },[chatId,chatArray,Chat,Contacts])
 
     props.socket.on('message', (obj) => {
 
@@ -98,14 +87,28 @@ const ChatRoom = (props) => {
         console.log(obj)
     })
 
-    props.socket.on('lastseen', (time) => {
-        const temptime = new Date()
-        var minutes = temptime.getMinutes()
 
-        if(minutes<10) minutes = `0${temptime.getMinutes()}`
+    const lastSeenHandler = () => {
 
-        setLastSeen(`${temptime.getHours()}:${minutes}`)
-    })
+        const temp = Contacts.filter(item => item.id === contactId)
+        const prevdate = new Date(temp[0].last_seen)
+        const now = new Date()
+        const datebool = now.getDate() ===  prevdate.getDate() && now.getMonth() === prevdate.getMonth() && now.getFullYear() === prevdate.getFullYear()
+        const timebool = now.getHours() === prevdate.getHours() && now.getMinutes() === prevdate.getMinutes()
+        const isostring = prevdate.toISOString()
+
+        if(temp.length>0) {
+            if(datebool && timebool) {
+                setLastSeen(isostring.substring(11,16)) // in future it will be 'Now'
+            }
+            if(datebool && !timebool) {
+                setLastSeen(`${isostring.substring(11,16)}`)
+            }
+            if(!datebool && !timebool) {
+                setLastSeen(`${isostring.substring(11,16)}, ${isostring.substring(0,10)}`)
+            }
+        }
+    }
 
     const recievemsgHandler = (obj) => {
         var temparr = chatArray.map(chat => {

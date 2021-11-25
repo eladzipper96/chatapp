@@ -28,6 +28,7 @@ const userSlice = createSlice({
         SetUser(state, action) {
             console.log(action.payload)
             state.id = action.payload._id || action.payload.id
+            state.username = action.payload.username
             state.name = action.payload.name
             state.last_name = action.payload.last_name
             state.phone = action.payload.phone
@@ -48,11 +49,9 @@ const userSlice = createSlice({
             state.notifications = action.payload.notifications
         },
         updateChat(state, action) {
-            console.log(action.payload)
             state.chats = action.payload;
         },
         updateActiveChats(state, action) {
-            console.log(action.payload)
             state.activechats = action.payload
         },
         updateNotifications(state, action) {

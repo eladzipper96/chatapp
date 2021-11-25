@@ -32,8 +32,6 @@ const Chat = () => {
             chats.forEach(chat => {
                 if(chat.id === chatId) {
                 setSocket(chat.socket)
-                console.log("updated the socket")
-                console.log(chat.socket)
                 }
             }) 
         
