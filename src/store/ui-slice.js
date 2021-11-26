@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import io from 'socket.io-client'
 
 const uiSlice = createSlice({
     name: "ui",
@@ -6,7 +7,7 @@ const uiSlice = createSlice({
         page: "Chats", // acts as a router
         chatId: "a", // tells which chat to render
         ChatPhoto: '',
-        contactName: 'NEED 2 DO!!!!',
+        contactName: '',
         contactId: 0,
         contactPhoto: '',
         SelectedContact: "",// tells which contanct to display
@@ -14,7 +15,8 @@ const uiSlice = createSlice({
         showNewChat: false,
         showCreateGroup: false,
         newNotifcation: false,
-        controlSocket: undefined
+        showAddFriendChat: false,
+        controlSocket: io('http://localhost:5000', {query:`chatid=${1}`})
 
     },
     reducers: {
@@ -56,6 +58,9 @@ const uiSlice = createSlice({
         },
         setreloadControl(state, action) {
             state.reloadControl = action.payload
+        },
+        setshowAddFriendChat(state, action) {
+            state.showAddFriendChat = action.payload
         }
 
     }

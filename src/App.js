@@ -5,7 +5,6 @@ import ChatList from './components/ChatList/ChatList'
 import Login from './components/Login/Login'
 import Control from './components/Control/Control'
 import ControlLastSeen from './components/Control/ControlLastSeen'
-import io from 'socket.io-client'
 import { useState } from 'react';
 
 function App() {
@@ -20,7 +19,6 @@ function App() {
        <Login setlogin={setLoggedIn}/>
     </div>}
     {LoggedIn && 
-        <>
         <div className='app'>
         <NavBar />
         <ChatList setLoggedIn={setLoggedIn} />
@@ -29,7 +27,6 @@ function App() {
         <ControlLastSeen />
       </div>
         
-      </>
     }
     </>
   );

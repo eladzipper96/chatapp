@@ -5,6 +5,7 @@ import UserInfoEdit from './UserInfoEdit/UserInfoEdit';
 import LandingPage from './LandingPage/LandingPage';
 import NewChat from './NewChat/NewChat'
 import CreateGroup from './CreateGroup/CreateGroup';
+import AddFriendChat from './AddFriendChat/AddFriendChat'
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
@@ -20,6 +21,7 @@ const Chat = () => {
     const chats = useSelector(state => state.user.chats)
     const showChats = useSelector(state => state.ui.showChats)
     const showNewChat = useSelector(state =>state.ui.showNewChat)
+    const showAddFriendChat = useSelector(state => state.ui.showAddFriendChat)
     const showCreateGroup = useSelector(state => state.ui.showCreateGroup)
     const [ContactBool, setContactBool] = useState(false)
     const [socket, setSocket] = useState()
@@ -53,10 +55,11 @@ const Chat = () => {
             {((header === 'Contacts') && !ContactBool) && <LandingPage />}
             {header === 'Profile' && <UserInfoEdit />}
 
-            {(showNewChat || showCreateGroup) &&
+            {(showNewChat || showCreateGroup || showAddFriendChat) &&
             <div className={classes.actioncontainer}>
             {showNewChat && <NewChat />}
             {showCreateGroup && <CreateGroup />}
+            {showAddFriendChat && <AddFriendChat />}
             </div>
             }
 

@@ -17,8 +17,10 @@ import { useSelector } from 'react-redux'
 const ContactInfo = (props) => {
 
     const user = useSelector(state => state.user)
-    const tempdate = new Date()
-    const localtime = `${tempdate.getHours()}:${tempdate.getMinutes()}`
+    var tempdate = new Date()
+    tempdate = tempdate.setHours(tempdate.getHours()+2)
+    tempdate = new Date(tempdate)
+    const localtime = tempdate.toISOString().substring(11,16)
 
     const logoutHandler = () => {
         props.setLoggedIn(false)

@@ -69,9 +69,15 @@
     margin-right: 1rem;
 }
 
+
 .unblock {
     background-color: rgb(145, 238, 145) !important;
     margin-right: 1rem;
+}
+
+.blockedmsg {
+    cursor: default !important;
+    background-color: gray !important;
 }
 
 .scroll {

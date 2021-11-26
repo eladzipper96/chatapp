@@ -363,12 +363,19 @@ const ChatList = (props) => {
                             msg={"Be the first to chat 😁"} 
                             chatid={item.id} photo={profile_picture} unread={unread} contactid={contactid}/> 
                         }
+                        else {
+                            if(item.type==='group') {
+                                return <ChatItem key={name} 
+                                name={name} time={item.content[length].time} 
+                                msg={item.content[length].author===USERID ? `Me: ${item.content[length].value}` : `${item.content[length].authorname.split(' ')[0]}: ${item.content[length].value}`} 
+                                chatid={item.id} photo={profile_picture} unread={unread} contactid={contactid}/>
+                            }
                         return <ChatItem key={name} 
                         name={name} time={item.content[length].time} 
                         msg={item.content[length].author===USERID ? `Me: ${item.content[length].value}` : `${name.split(' ')[0]}: ${item.content[length].value}`} 
                         chatid={item.id} photo={profile_picture} unread={unread} contactid={contactid}/>
-                    }
-                
+                        }
+                    }                
                 }
                 }) }
             

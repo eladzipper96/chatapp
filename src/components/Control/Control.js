@@ -10,10 +10,13 @@ const Control = () => {
     const dispatch = useDispatch()
     const USERID = useSelector(state => state.user.id)
     const chats = useSelector(state => state.user.chats)
+    const blocked = useSelector(state => state.user.blocked)
+    const contacts = useSelector(state => state.user.contacts)
+    const userNotifications = useSelector(state => state.user.notifications)
+    const controlSocket = useSelector(state => state.ui.controlSocket)
 
-    console.log('control comp reloaded')
 
-        var controlSocket = io('http://localhost:5000', {query:`chatid=${USERID}`})
+        //var controlSocket = io('http://localhost:5000', {query:`chatid=${USERID}`})
 
         controlSocket.on('lastseen', (obj) => {
 
@@ -38,19 +41,22 @@ const Control = () => {
      */
 
 
-         const contacts = useSelector(state => state.user.contacts)
-         const userNotifications = useSelector(state => state.user.notifications)
+
 
         
          controlSocket.on('friendrequest', (obj) => {
-             dispatch(uiActions.setnewNotifcation(true))
-             dispatch(userActions.updateNotifications([...userNotifications,{
-                 type: 'friend_request',
-                 from_name: obj.sender_name,
-                 from_id: obj.sender_id,
-                 time: obj.time,
-                 picture: obj.picture
-             }]))
+
+             if(!obj.sender_id.includes(blocked)) {
+                 
+                dispatch(uiActions.setnewNotifcation(true))
+                dispatch(userActions.updateNotifications([...userNotifications,{
+                    type: 'friend_request',
+                    from_name: obj.sender_name,
+                    from_id: obj.sender_id,
+                    time: obj.time,
+                    picture: obj.picture
+                }]))
+             }
          })
      
          /// When your friend request is being accepted

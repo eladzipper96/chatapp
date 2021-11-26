@@ -199,9 +199,16 @@
 }
 
 .emoji_icon {
-
     align-self: center;
     margin-left: 1.75rem;
+    cursor: pointer;
+}
+
+.emojicontainer {
+    position: absolute;
+    z-index: 5000000;
+    bottom: 13rem;
+    right: 15rem;
 }
 
 .send {

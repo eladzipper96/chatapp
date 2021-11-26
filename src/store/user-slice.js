@@ -21,6 +21,7 @@ const userSlice = createSlice({
         profile_picture: '',
         contacts: [],
         chats: [],
+        blocked: [],
         activechats: [],
         notifications: []
         },
@@ -47,8 +48,10 @@ const userSlice = createSlice({
             state.chats = action.payload.chats
             state.activechats = action.payload.activechats
             state.notifications = action.payload.notifications
+            state.blocked = action.payload.blocked
         },
         updateChat(state, action) {
+            console.log(action.payload)
             state.chats = action.payload;
         },
         updateActiveChats(state, action) {
@@ -59,6 +62,9 @@ const userSlice = createSlice({
         },
         updateContacts (state, action) {
             state.contacts = action.payload
+        },
+        updateBlocked (state, action) {
+             state.blocked = action.payload
         }
 
 

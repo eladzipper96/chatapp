@@ -6,7 +6,21 @@ import { userActions } from '../../../store/user-slice';
 
 const UserInfoEdit = () => {
     const temp = useSelector(state => state.user)
-    const [user,setUser] = useState(temp)
+    const [user,setUser] = useState({
+        id: temp.id,
+        name: temp.name,
+        last_name: temp.last_name,
+        phone: temp.phone,
+        birthday: temp.birthday,
+        email: temp.email,
+        website: temp.website,
+        address: temp.address,
+        facebook: temp.facebook,
+        twitter: temp.twitter,
+        instagram: temp.instagram,
+        linkedin: temp.linkedin,
+        moto: temp.moto
+    })
     const [password, setPassword] = useState({cur: "", new: "", repeat: ""})
     const dispatch = useDispatch()
 
@@ -28,29 +42,58 @@ const UserInfoEdit = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({
-                ...password
+                ...password,
+                id: temp.id
             }) 
         }
 
         if(str==='Account') {
             fetch('http://localhost:5000/account', requestOptions).then(
-                dispatch(userActions.SetUser(user)),
+                dispatch(userActions.SetUser({
+                    ...temp,
+                    name: user.name,
+                    last_name: user.last_name,
+                    phone: user.phone,
+                    birthday: user.birthday,
+                    email: user.email,
+                    website: user.website,
+                    address: user.address,
+                    moto: user.moto
+                })),
                 setShowAccount(true)
             )
         }
 
         if(str==='Social') {
             fetch('http://localhost:5000/social', requestOptions).then(
-                dispatch(userActions.SetUser(user)),
+                dispatch(userActions.SetUser({
+                    ...temp,
+                    facebook: user.facebook,
+                    twitter: user.twitter,
+                    instagram: user.instagram,
+                    linkedin: user.linkedin,
+                })),
                 setShowSocial(true)
             ) 
         }
 
         if(str==='Password') {
-            fetch('http://localhost:5000/passwordchange', passwordOptions).then(
-                dispatch(userActions.SetUser(user)),
-                setShowPassword(true)
-            ) 
+            if(password.new !== password.repeat) {
+                alert('Repeat Password is wrong')
+            }
+            else {
+                fetch('http://localhost:5000/passwordchange', passwordOptions)
+                .then(val => val.json())
+                .then(val => {
+                    if(val.status !== 'ok') {
+                        alert('Wrong Password')
+                    }
+                    else {
+                    setShowPassword(true)
+                    }
+                })
+                
+            }
         }
     }
 
@@ -66,7 +109,8 @@ const UserInfoEdit = () => {
                     birthday: temp.birthday,
                     email: temp.email,
                     website: temp.website,
-                    address: temp.address
+                    address: temp.address,
+                    moto: temp.moto
                 }
             })  
             
@@ -139,10 +183,15 @@ const UserInfoEdit = () => {
                         <input type="text" value={user.website}
                         onChange={(e) => setUser(val => {return {...val,website: e.target.value}})}></input>
                     </div>
-                    <div className={[classes.input,classes.inputlong].join(' ')}>
+                    <div className={classes.input}>
                         <label>Address</label>
                         <input type="text" required value={user.address}
                         onChange={(e) => setUser(val => {return {...val,address: e.target.value}})}></input>
+                    </div>
+                         <div className={classes.input}>
+                        <label>Moto</label>
+                        <input type="text" required value={user.moto}
+                        onChange={(e) => setUser(val => {return {...val,moto: e.target.value}})}></input>
                     </div>
                </div> 
                <div className={classes.buttons}>
