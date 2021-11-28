@@ -73,3 +73,11 @@
     bottom: 0px;
     right: 0px;
 }
+
+@media screen and (max-width: 850px) {
+
+    .container {
+        width: fit-content;
+    }
+  
+  }

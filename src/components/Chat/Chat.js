@@ -27,8 +27,7 @@ const Chat = () => {
     const [socket, setSocket] = useState()
 
     const dispatch = useDispatch()
-    //const socket = io('http://localhost:5000', {query:`chatid=${chatId}`})
-    //var socket;
+
     useEffect(()=> {
 
             chats.forEach(chat => {

@@ -8,7 +8,7 @@ const ControlLastSeen = () => {
 
 
     const USERID = useSelector(state => state.user.id)
-    
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
     const somethingHandler = async () => {
 
@@ -22,12 +22,12 @@ const ControlLastSeen = () => {
 
 
         setInterval(() => {
-            fetch('http://localhost:5000/last_seen', requestOptions).then( )
+            fetch(`${REACT_APP_API_URL}/last_seen`, requestOptions).then( )
 
-            fetch('http://localhost:5000/getcontacts', requestOptions).then(val => val.json())
+            fetch(`${REACT_APP_API_URL}/getcontacts`, requestOptions).then(val => val.json())
             .then(val => {
                 const sockets = val.map((contact) => {
-                const tempsocket = io('http://localhost:5000', {query:`chatid=${contact.id}`})
+                const tempsocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${contact.id}`})
                 return tempsocket
                 })
 

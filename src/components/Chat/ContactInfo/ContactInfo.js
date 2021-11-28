@@ -30,6 +30,8 @@ const ContactInfo = () => {
     const activeChats = useSelector(state => state.user.activechats)
     const [blocked, setBlocked] = useState(false)
 
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
     useEffect(() => {
         if(blocked_array.includes(selected_id)) {
             setBlocked(true)
@@ -51,8 +53,22 @@ const ContactInfo = () => {
 
     const msgButtonHandler = () => {
 
-        if(!activeChats.includes(chatid)) {
+        if(!activeChats.includes(chatid)) 
+        {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    type: 'add',
+                    id: userID,
+                    chatid: chatid
+               })
+            }
+    
+            fetch(`${REACT_APP_API_URL}/updateactivechats`, requestOptions).then(val => val.text())
+
             dispatch(userActions.updateActiveChats([chatid,...activeChats]))
+
         }
         dispatch(uiActions.SetPage('Chats'))
         dispatch(uiActions.setContactId(contact.id))
@@ -61,6 +77,8 @@ const ContactInfo = () => {
         dispatch(uiActions.setChatPhoto(contact.profile_picture))
         dispatch(uiActions.setChatId(chatid))
         dispatch(uiActions.setShowChats(true))
+
+
     }
 
     const blockHandler = () => {
@@ -76,7 +94,7 @@ const ContactInfo = () => {
            })
         }
 
-        fetch('http://localhost:5000/block', requestOptions).then(val => val.text())
+        fetch(`${REACT_APP_API_URL}/block`, requestOptions).then(val => val.text())
         const newactivechats = activeChats.filter(val => val !== chatid)
         dispatch(userActions.updateActiveChats(newactivechats))
         dispatch(userActions.updateBlocked([...blocked_array,selected_id]))
@@ -96,7 +114,7 @@ const ContactInfo = () => {
            })
         }
         
-        fetch('http://localhost:5000/block', requestOptions).then(val => val.text())
+        fetch(`${REACT_APP_API_URL}/block`, requestOptions).then(val => val.text())
 
         const newblocked = blocked_array.filter(val => val !== selected_id)
         dispatch(userActions.updateBlocked(newblocked))

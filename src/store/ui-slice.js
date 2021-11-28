@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import io from 'socket.io-client'
 
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
 const uiSlice = createSlice({
     name: "ui",
     initialState: {
@@ -16,7 +18,7 @@ const uiSlice = createSlice({
         showCreateGroup: false,
         newNotifcation: false,
         showAddFriendChat: false,
-        controlSocket: io('http://localhost:5000', {query:`chatid=${1}`})
+        controlSocket: io(`${REACT_APP_API_URL}`, {query:`chatid=${1}`})
 
     },
     reducers: {

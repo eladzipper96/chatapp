@@ -7,7 +7,7 @@
     font-size: 1.4rem;
     margin-right: 3rem; // added 2 rem for hiding the scrollbar
     margin-left: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     padding: 1rem 1rem 1rem 1rem;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -17,6 +17,7 @@
     border-color: $color-gray;
     border-width: 1.5px;
     cursor: pointer;
+    background-color: white;
 
     &:hover {
         border-color: $color-primary; 
@@ -81,4 +82,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media screen and (max-width: 970px) {
+
+    .name, .msg {
+        margin-left: 8px;
+    }
+
+
+
 }

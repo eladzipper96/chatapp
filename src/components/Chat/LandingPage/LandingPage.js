@@ -8,7 +8,9 @@ const LandingPage = () => {
 
     return <div className={classes.container}>
         <div className={classes.header}>{`Welcome`}</div>
-        <div className={classes.subheader}>We missed you 😘</div>
+        <div className={classes.subheader}
+        >We missed you 😘
+        </div>
         <div className={classes.imagecontainer}>
             <img src={people} alt='people'></img>
         </div>

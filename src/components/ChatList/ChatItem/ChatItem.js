@@ -12,6 +12,7 @@ const ChatItem = (props) => {
     const dispatch = useDispatch();
     const page = useSelector(state => state.ui.page)
     const chats = useSelector(state => state.user.chats)
+    const screenwidth = window.screen.width
     const [unread, setUnread] = useState(0)
 
 
@@ -75,10 +76,13 @@ const ChatItem = (props) => {
             </div>}
 
             {unread!==0 && <div className={classes.unread}>{unread}</div>}
+
             {props.contacts &&
             <div className={classes.msg}>
                 <img src={megaphone} alt="moto:"/>
-                <div>{props.msg.substring(0,40)}</div>
+                {screenwidth > 971 && <div>{props.msg.substring(0,40)}</div>}
+                {(screenwidth < 971 && props.msg.length<22) && <div>{props.msg.substring(0,22)}</div>}
+                {(screenwidth < 971 && props.msg.length>22) && <div>{props.msg.substring(0,22)+'...'}</div>}
             </div>}
         </div>
     )

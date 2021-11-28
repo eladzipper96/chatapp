@@ -28,3 +28,18 @@ input[type="text"]
   grid-template-rows: 1fr;
   grid-template-columns: 8rem 40rem 1fr;
 }
+
+@media screen and (max-width: 970px) {
+  .app {
+    grid-template-columns: 8rem 300px 1fr;
+  }
+
+}
+
+@media screen and (max-width: 850px) {
+  .app {
+    grid-template-columns: 8rem 300px 1fr;
+  }
+
+}
+

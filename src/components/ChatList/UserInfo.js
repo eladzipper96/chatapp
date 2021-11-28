@@ -13,10 +13,12 @@ import instagram from '../../assets/instagram.svg'
 import linkedin from '../../assets/linkedin.svg'
 
 import { useSelector } from 'react-redux'
+import { useState } from 'react'
 
 const ContactInfo = (props) => {
 
     const user = useSelector(state => state.user)
+    const controlSocket = useSelector(state => state.ui.controlSocket)
     var tempdate = new Date()
     tempdate = tempdate.setHours(tempdate.getHours()+2)
     tempdate = new Date(tempdate)
@@ -24,7 +26,16 @@ const ContactInfo = (props) => {
 
     const logoutHandler = () => {
         props.setLoggedIn(false)
+        user.chats.forEach((chat) => {
+            chat.socket.emit('deletesocket')
+        })  
+        var highestTimeoutId = setTimeout(";");
+        for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearTimeout(i); 
+        }   
+        controlSocket.emit('deletesocket')
     }
+
 
     return (
         <div className={classes.container}>

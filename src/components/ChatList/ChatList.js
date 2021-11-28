@@ -3,6 +3,7 @@ import dots from '../../assets/dots.svg'
 import dots_black from '../../assets/dots_black.svg'
 import bell from '../../assets/bell.svg'
 import bellBlack from '../../assets/bell_black.svg'
+import sad from '../../assets/sad.svg'
 import search from '../../assets/search.svg'
 import addFriend from '../../assets/add_friend.svg'
 import addFriendBlack from '../../assets/add_friend_black.svg'
@@ -21,6 +22,8 @@ import io from 'socket.io-client'
 
 const ChatList = (props) => {
 
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
     const [showDetails, setShowDetails] = useState(false)
     const [showAddFriend, setShowAddFriend] = useState(false)
     const [showNotifications, setShowNotifcations] = useState(false)
@@ -30,18 +33,20 @@ const ChatList = (props) => {
     const newNotifcation = useSelector(state => state.ui.newNotifcation)
 
     const header = useSelector(state => state.ui.page)
-    const USERID = useSelector(state => state.user.id)
-    const myUsername = useSelector(state => state.user.username)
-    const userName = useSelector(state => state.user.name+" "+state.user.last_name)
-    const userPicture = useSelector(state => state.user.profile_picture)
     const chatId = useSelector(state => state.ui.chatId)
-    const _contactlist = useSelector(state => state.user.contacts)
-    const _chats = useSelector(state => state.user.chats);
-    const activechats = useSelector(state => state.user.activechats)
-    const notifications = useSelector(state => state.user.notifications)
 
     const userinfo = useSelector(state => state.user)
 
+    const USERID = userinfo.id
+    const myUsername = userinfo.username
+    const userName = userinfo.name+" "+userinfo.last_name
+    const userPicture = userinfo.profile_picture
+
+    const _contactlist = userinfo.contacts
+    const _chats = userinfo.chats
+    const activechats = userinfo.activechats
+    const notifications = userinfo.notifications
+   
     const now_time = new Date()
     const now_date = now_time.toISOString().substring(0,10)
 
@@ -83,7 +88,7 @@ const ChatList = (props) => {
         })
 
         dispatch(userActions.updateNotifications(arr))
-        fetch('http://localhost:5000/notification', requestOptions).then(console.log('removed notifcation'))
+        fetch(`${REACT_APP_API_URL}/notification`, requestOptions).then(console.log('removed notifcation'))
     }
 
     const AcceptHandler = (obj) => {
@@ -97,7 +102,7 @@ const ChatList = (props) => {
            })
         }
 
-        fetch('http://localhost:5000/create_newchat', Options).then(val => val.json())
+        fetch(`${REACT_APP_API_URL}/create_newchat`, Options).then(val => val.json())
         .then(val => {
             const contact = {
                 name: val.name,
@@ -118,20 +123,21 @@ const ChatList = (props) => {
                 last_seen: val.last_seen
             }
 
-            const socketforchat = io('http://localhost:5000', {query:`chatid=${val.chatid}`})
+            const socketforchat = io(`${REACT_APP_API_URL}`, {query:`chatid=${val.chatid}`})
 
             const chat = {
                 id: val.chatid,
                 owners: val.chatowners,
                 content: [],
                 type: 'friend',
+                updatedAt: new Date(),
                 socket: socketforchat
             }
 
             dispatch(userActions.updateContacts([..._contactlist,contact]))
             dispatch(userActions.updateChat([..._chats,chat]))
 
-            const tempsocket = io('http://localhost:5000', {query:`chatid=${obj.from_id}`})
+            const tempsocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.from_id}`})
 
             tempsocket.emit('acceptfriend', {
                 chatid: val.chatid,
@@ -182,11 +188,11 @@ const ChatList = (props) => {
         }
 
         if(friendUsername.length>0) {
-            fetch('http://localhost:5000/addfriend', requestOptions)
+            fetch(`${REACT_APP_API_URL}/addfriend`, requestOptions)
             .then(res => res.json())
             .then(res => {
                 if(res.status === 'true') {
-                    const socket = io('http://localhost:5000', {query:`chatid=${res.id}`})
+                    const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res.id}`})
                     socket.emit('friendrequest',{sender_id: USERID, sender_name: userName, time: date, picture: userPicture})
                     setFriendUsername('')
                     setShowAddFriend(false)
@@ -198,7 +204,13 @@ const ChatList = (props) => {
             })
         }
     }
-
+    const temparr = [..._chats]
+    const sorted_arr = temparr.sort((a,b) => {
+        var date_a = new Date(a.updatedAt)
+        var date_b = new Date(b.updatedAt)
+        return date_b.getTime() - date_a.getTime()
+        
+    })
 
     return (
     <div className={classes.container}>
@@ -212,10 +224,9 @@ const ChatList = (props) => {
             </div>
             <div className={classes.select}>
             <select onChange={(e)=> setSelectOption(e.target.value.split(','))}>
-                <option value={['friend','group','unread']}>All Chats</option>
+                <option value={['friend','group']}>All Chats</option>
                 <option value={['friend']}>Friends</option>
                 <option value={['group']}>Groups</option>
-                <option value={['unread']}>Unread</option>
             </select>
             </div>
 
@@ -238,8 +249,6 @@ const ChatList = (props) => {
                     dispatch(uiActions.setshowCreateGroup(true))
                     setShowDetails(false)
                 }}>Create Group</li>
-
-                <li>Invite Others</li>
             </ul>
             </div>
             )}
@@ -261,7 +270,11 @@ const ChatList = (props) => {
                     <span className={classes.notifcations_header}>Notifcations</span>
                     <img className={classes.notifcation_exit} src={close} alt='X' onClick={() => setShowNotifcations(false)}></img>
                     <div className={classes.notifcations_itemcontainer}>
-                    {notifications.length===0 && <div>There is no Notifciations</div>}
+                    {notifications.length===0 && 
+                    <div className={classes.nonotification}>
+                        <img src={bell} alt='No notifcations =['/>
+                        <span>No Notifcations</span>
+                    </div>}
                     {notifications.slice(0).reverse().map((val,index) => {
                         if(val.type === 'friend_accept') {
                             return (
@@ -309,7 +322,7 @@ const ChatList = (props) => {
         <div className={classes.main}>
             <div className={classes.chatlist}>
                 {(header === '' || header === 'Chats') && 
-                _chats.map((item,index)=> {
+                sorted_arr.map((item,index)=> {
                     if(activechats.includes(item.id) && selectOption.includes(item.type)) {
 
                     var length = item.content.length-1

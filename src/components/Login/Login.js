@@ -18,6 +18,8 @@ const Login = (props) => {
     const [registerEmail, setRegisterEmail] = useState('')
     const [registerName, setRegisterName] = useState('')
 
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
     const sumbitHandler = (e) => {
         e.preventDefault()
 
@@ -31,14 +33,14 @@ const Login = (props) => {
                 password: Password
            })
         }
-        fetch('http://localhost:5000/login', requestOptions)
+        fetch(`${REACT_APP_API_URL}/login`, requestOptions)
         .then(res => res.json())
         .then(res => {
             if(res.length>0) {
                 dispatch(userActions.SetUser(res[0]))
                 
                 const temp = res[0].chats.map((chat) => {
-                    const socket = io('http://localhost:5000', {query:`chatid=${chat.id}`})
+                    const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${chat.id}`})
 
                     return {
                         ...chat,
@@ -46,7 +48,7 @@ const Login = (props) => {
                     }
                 })
 
-                const controlSocket = io('http://localhost:5000', {query:`chatid=${res[0]._id}`})
+                const controlSocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res[0]._id}`})
                 dispatch(userActions.updateChat(temp))
                 dispatch(uiActions.setControlSocket(controlSocket))
                 props.setlogin(true)
@@ -64,7 +66,7 @@ const Login = (props) => {
     const submitRegister = (e) => {
         e.preventDefault()
 
-        if(registerUser.length>4 && registerPass>5 && registerEmail.includes('@') && registerName.includes(' ')) {
+        if(registerUser.length>3 && registerPass.length>5 && registerEmail.includes('@') && registerName.includes(' ')) {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
@@ -75,7 +77,7 @@ const Login = (props) => {
                     name: registerName
                })
             }
-            fetch('http://localhost:5000/register', requestOptions)
+            fetch(`${REACT_APP_API_URL}/register`, requestOptions)
             .then(val => val.json())
             .then(val => {
                 if(val.status === 'taken') {
@@ -93,7 +95,7 @@ const Login = (props) => {
             })
         }
         else {
-            alert('not sent, upgrade')
+            alert('One of the inputs are not valid, Registration failed.')
         }
     }
 
@@ -124,12 +126,16 @@ const Login = (props) => {
                     <form className={classes.registerform}>
                         <label>Username</label>
                         <input type='text' required onChange={(e) => {setRegisterUser(e.target.value)}} value={registerUser}></input>
+                        <small>Username has to be minimum of 4 letters</small>
                         <label >Password</label>
                         <input required type='password' onChange={(e) => {setRegisterPass(e.target.value)}} value={registerPass}></input>
+                        <small>Password has to be minimum of 6 letters</small>
                         <label>Email</label>
                         <input required type='email' onChange={(e) => {setRegisterEmail(e.target.value)}} value={registerEmail}></input>
+                        <small></small>
                         <label>Full Name</label>
                         <input type='text' required onChange={(e) => {setRegisterName(e.target.value)}} value={registerName}></input>
+                        <small>Full name must include both first and last name</small>
                         <button type='submit' onClick={submitRegister}>Sign Up</button>
                     </form>
                 </div>

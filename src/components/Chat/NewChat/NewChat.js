@@ -5,7 +5,9 @@ import { uiActions } from '../../../store/ui-slice';
 import { userActions } from '../../../store/user-slice';
 
 const NewChat = () => {
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
     const dispatch = useDispatch()
+    const userID = useSelector(state => state.user.id)
     const contacts = useSelector(state => state.user.contacts)
     const chats = useSelector(state => state.user.chats)
     const activeChats = useSelector(state => state.user.activechats)
@@ -22,6 +24,18 @@ const NewChat = () => {
 
                 if(!activeChats.includes(chat.id)) {
                     dispatch(userActions.updateActiveChats([...activeChats,chat.id]))
+
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            type: 'add',
+                            id: userID,
+                            chatid: chat.id
+                       })
+                    }
+            
+                    fetch(`${REACT_APP_API_URL}/updateactivechats`, requestOptions).then(val => val.text())
                 }
             }
         })

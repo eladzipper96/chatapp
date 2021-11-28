@@ -1,39 +1,58 @@
 import React from 'react'
 import io from 'socket.io-client'
 import { useDispatch, useSelector } from 'react-redux';
+import { useState , useEffect} from 'react'
 import { userActions } from '../../store/user-slice';
 import { uiActions } from '../../store/ui-slice';
 
 
 const Control = () => {
 
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
     const dispatch = useDispatch()
     const USERID = useSelector(state => state.user.id)
     const chats = useSelector(state => state.user.chats)
     const blocked = useSelector(state => state.user.blocked)
-    const contacts = useSelector(state => state.user.contacts)
     const userNotifications = useSelector(state => state.user.notifications)
     const controlSocket = useSelector(state => state.ui.controlSocket)
 
+    const [_contacts, setContacts] = useState([])
 
-        //var controlSocket = io('http://localhost:5000', {query:`chatid=${USERID}`})
+    useEffect(() => {
+        fetch(`${REACT_APP_API_URL}/getcontacts`, requestOptions).then(val => val.json())
+        .then((contacts) => {setContacts(contacts)})
+    },[])
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: USERID
+           })
+        }
 
         controlSocket.on('lastseen', (obj) => {
+                if(obj.author!==USERID) {
 
-            if(obj.author) {
-                const temp = contacts.filter(item => item.id === obj.author)
-    
-                var contact = {...temp[0]}
-                const temp_1 = new Date()
-                const temp_2 = temp_1.setHours(temp_1.getHours()+2)
-                const time = new Date(temp_2)
-                var isostring = time
-        
-                contact.last_seen = isostring
-                const everybodybutauthor = contacts.filter(item => {if(item.id !== obj.author) { return item}})
-                dispatch(userActions.updateContacts([...everybodybutauthor,contact]))
-    
-            }
+                      fetch(`${REACT_APP_API_URL}/getcontacts`, requestOptions).then(val => val.json())
+                      .then((contacts) => {
+                        console.log('got a lastseen')
+                        const temp = contacts.filter(item => item.id === obj.author)
+                        const everybodybutauthor = contacts.filter(item => {if(item.id !== obj.author) { return item}})
+
+                        var contact = {...temp[0]}
+                        const temp_1 = new Date()
+                        const temp_2 = temp_1.setHours(temp_1.getHours()+2)
+                        const time = new Date(temp_2)
+                        var isostring = time
+                
+                        contact.last_seen = isostring
+
+                        dispatch(userActions.updateContacts([...everybodybutauthor,contact]))
+                      })
+
+                }    
         })
 
      /**
@@ -62,7 +81,7 @@ const Control = () => {
          /// When your friend request is being accepted
          controlSocket.on('acceptfriend', (obj) => {
      
-             const chatsocket = io('http://localhost:5000', {query:`chatid=${obj.chatid}`})
+             const chatsocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.chatid}`})
      
              const newcontact = {
                  address: obj.address,
@@ -98,7 +117,7 @@ const Control = () => {
                  picture: obj.profile_picture
              }
      
-             dispatch(userActions.updateContacts([...contacts,newcontact]))
+             dispatch(userActions.updateContacts([..._contacts,newcontact]))
              dispatch(userActions.updateChat([...chats,newchat]))
              dispatch(userActions.updateNotifications([...userNotifications,newnotifcation]))
              dispatch(uiActions.setnewNotifcation(true))

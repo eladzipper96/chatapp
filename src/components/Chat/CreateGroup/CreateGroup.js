@@ -18,6 +18,8 @@ const CreateGroup = () => {
     const [groupMembers, setGroupMembers] = useState([userID])
     const [groupName, setGroupName] = useState('')
 
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
 
     const sorted_contacts = temp.sort((a,b) => {
        return a.name.charCodeAt(0) - b.name.charCodeAt(0)
@@ -45,7 +47,7 @@ const CreateGroup = () => {
                })
             }
     
-            fetch('http://localhost:5000/addnewgroup', requestOptions)
+            fetch(`${REACT_APP_API_URL}/addnewgroup`, requestOptions)
             .then(res =>{
                 return res.text()
             })
