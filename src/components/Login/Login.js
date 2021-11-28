@@ -47,7 +47,6 @@ const Login = (props) => {
                         socket: socket
                     }
                 })
-
                 const controlSocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res[0]._id}`})
                 dispatch(userActions.updateChat(temp))
                 dispatch(uiActions.setControlSocket(controlSocket))

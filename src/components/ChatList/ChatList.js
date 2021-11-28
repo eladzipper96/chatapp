@@ -102,6 +102,16 @@ const ChatList = (props) => {
            })
         }
 
+        const DeleteNotifcationOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                type: 'remove',
+                id: USERID,
+                from_id: obj.from_id,
+           })
+        }
+
         fetch(`${REACT_APP_API_URL}/create_newchat`, Options).then(val => val.json())
         .then(val => {
             const contact = {
@@ -161,6 +171,14 @@ const ChatList = (props) => {
             })
         })
 
+        const arr = notifications.filter((not) => {
+            return not.from_id !== obj.from_id
+        })
+
+        fetch(`${REACT_APP_API_URL}/notification`, DeleteNotifcationOptions).then(console.log('removed notifcation'))
+
+        dispatch(userActions.updateNotifications(arr))
+
     }
 
     const submitAddFriend = () => {
@@ -191,9 +209,10 @@ const ChatList = (props) => {
             fetch(`${REACT_APP_API_URL}/addfriend`, requestOptions)
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 if(res.status === 'true') {
                     const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res.id}`})
-                    socket.emit('friendrequest',{sender_id: USERID, sender_name: userName, time: date, picture: userPicture})
+                    socket.emit('friendrequest',{sender_id: USERID, sender_name: userName, time: date, picture: userPicture, username: friendUsername,})
                     setFriendUsername('')
                     setShowAddFriend(false)
                     alert('Friend Request Sent!')

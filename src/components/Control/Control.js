@@ -5,6 +5,8 @@ import { useState , useEffect} from 'react'
 import { userActions } from '../../store/user-slice';
 import { uiActions } from '../../store/ui-slice';
 
+import sound from './NotifcationBeep'
+
 
 const Control = () => {
 
@@ -37,7 +39,6 @@ const Control = () => {
 
                       fetch(`${REACT_APP_API_URL}/getcontacts`, requestOptions).then(val => val.json())
                       .then((contacts) => {
-                        console.log('got a lastseen')
                         const temp = contacts.filter(item => item.id === obj.author)
                         const everybodybutauthor = contacts.filter(item => {if(item.id !== obj.author) { return item}})
 
@@ -60,12 +61,15 @@ const Control = () => {
      */
 
 
-
+        const Beep = () => {
+            sound.volume = 0.2;
+            sound.play();  
+        }
 
         
          controlSocket.on('friendrequest', (obj) => {
 
-             if(!obj.sender_id.includes(blocked)) {
+             if(!blocked.includes(obj.sender_id)) {
                  
                 dispatch(uiActions.setnewNotifcation(true))
                 dispatch(userActions.updateNotifications([...userNotifications,{
@@ -76,13 +80,14 @@ const Control = () => {
                     picture: obj.picture
                 }]))
              }
+             Beep()
          })
      
          /// When your friend request is being accepted
          controlSocket.on('acceptfriend', (obj) => {
      
              const chatsocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.chatid}`})
-     
+               
              const newcontact = {
                  address: obj.address,
                  birthday: obj.birthday,
@@ -95,17 +100,19 @@ const Control = () => {
                  linkedin: obj.linkedin,
                  moto: obj.moto,
                  name: obj.name,
+                 username: obj.username,
                  phone: obj.phone,
                  profile_picture: obj.profile_picture,
                  twitter: obj.twitter,
                  website: obj.website
              }
-     
+             console.log(newcontact)
              const newchat = {
                  id: obj.chatid,
                  owners: obj.owners,
                  content: [],
                  type: 'friend',
+                 updatedAt: new Date().toString(),
                  socket: chatsocket
              }
      
@@ -121,6 +128,8 @@ const Control = () => {
              dispatch(userActions.updateChat([...chats,newchat]))
              dispatch(userActions.updateNotifications([...userNotifications,newnotifcation]))
              dispatch(uiActions.setnewNotifcation(true))
+
+             Beep()
              
          })
      
