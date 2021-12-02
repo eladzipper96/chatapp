@@ -356,7 +356,6 @@ const ChatList = (props) => {
 
                     var length = item.content.length-1
                     var name = '';
-                    //var last_seen;
                     var profile_picture;
                     var contactid;
                     var unread = 0;
@@ -372,7 +371,6 @@ const ChatList = (props) => {
                         contactid = 'undefined'
                         name = item.name
                         profile_picture = item.picture
-                        //last_seen = '99:99'
                     }
 
                     if(item.type==='friend') {
@@ -381,7 +379,6 @@ const ChatList = (props) => {
                             _contactlist.forEach(val => {
                                 if(item.owners[1] === val.id) {
                                     name = val.name+" "+val.last_name
-                                    //last_seen = val.last_seen
                                     profile_picture = val.profile_picture
                                 }
                             });
@@ -392,7 +389,6 @@ const ChatList = (props) => {
                             _contactlist.forEach(val => {
                                 if(item.owners[0] === val.id) {
                                     name = val.name+" "+val.last_name
-                                    //last_seen = val.last_seen
                                     profile_picture = val.profile_picture
                                 }
                             });

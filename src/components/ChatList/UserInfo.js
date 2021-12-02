@@ -13,7 +13,6 @@ import instagram from '../../assets/instagram.svg'
 import linkedin from '../../assets/linkedin.svg'
 
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
 
 const ContactInfo = (props) => {
 
@@ -29,6 +28,7 @@ const ContactInfo = (props) => {
         user.chats.forEach((chat) => {
             chat.socket.emit('deletesocket')
         })  
+        /// Clears all Intervals/Timeouts
         var highestTimeoutId = setTimeout(";");
         for (var i = 0 ; i < highestTimeoutId ; i++) {
         clearTimeout(i); 

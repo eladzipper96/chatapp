@@ -7,10 +7,8 @@ import NewChat from './NewChat/NewChat'
 import CreateGroup from './CreateGroup/CreateGroup';
 import AddFriendChat from './AddFriendChat/AddFriendChat'
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { uiActions } from '../../store/ui-slice';
+import { useSelector } from 'react-redux';
 
-import profilepicture from '../../assets/profilepicture.jpg'
 
 
 const Chat = () => {
@@ -25,8 +23,6 @@ const Chat = () => {
     const showCreateGroup = useSelector(state => state.ui.showCreateGroup)
     const [ContactBool, setContactBool] = useState(false)
     const [socket, setSocket] = useState()
-
-    const dispatch = useDispatch()
 
     useEffect(()=> {
 
