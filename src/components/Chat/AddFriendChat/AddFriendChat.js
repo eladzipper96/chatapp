@@ -9,7 +9,6 @@ const AddFriendChat = () => {
     const contacts = useSelector(state => state.user.contacts)
     const chats = useSelector(state => state.user.chats)
     const chatId = useSelector(state => state.ui.chatId)
-    const activeChats = useSelector(state => state.user.activechats)
     const temp = [...contacts] // this is copy the contacts array due to readonly.
 
     const sorted_contacts = temp.sort((a,b) => {
@@ -53,7 +52,7 @@ const AddFriendChat = () => {
             {finalarray.map(item => {
             return <div className={classes.item} onClick={()=> clickHandler(item)}>
                         <div className={classes.imagecontainer}>
-                            <img src={item.profile_picture}></img>
+                            <img src={item.profile_picture} alt='profilepic'></img>
                         </div>
                         <div className={classes.info}>
                             <span className={classes.name}>{item.name+" "+item.last_name}</span>

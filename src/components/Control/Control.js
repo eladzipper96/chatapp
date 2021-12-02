@@ -106,13 +106,13 @@ const Control = () => {
                  twitter: obj.twitter,
                  website: obj.website
              }
-             console.log(newcontact)
+
              const newchat = {
                  id: obj.chatid,
                  owners: obj.owners,
                  content: [],
                  type: 'friend',
-                 updatedAt: new Date().toString(),
+                 updatedAt: new Date().toISOString(),
                  socket: chatsocket
              }
      

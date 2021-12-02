@@ -18,8 +18,9 @@
     width: 150px;
     height: 150px;
     padding: 25px 25px 25px 25px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     border-radius: 50%;
+    overflow: hidden; // Important! - Fix the size of the logo
 
     .img {
         width: 100%;
@@ -35,6 +36,7 @@
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 1.5px 1fr;
+    overflow: unset !important;
 }
 
 .title {
@@ -56,6 +58,7 @@
 .loginform {
     display: flex;
     flex-direction: column;
+    margin-bottom: 3rem;
 
     label {
         font-size: 1.6rem;

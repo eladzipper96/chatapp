@@ -3,7 +3,6 @@ import dots from '../../assets/dots.svg'
 import dots_black from '../../assets/dots_black.svg'
 import bell from '../../assets/bell.svg'
 import bellBlack from '../../assets/bell_black.svg'
-import sad from '../../assets/sad.svg'
 import search from '../../assets/search.svg'
 import addFriend from '../../assets/add_friend.svg'
 import addFriendBlack from '../../assets/add_friend_black.svg'
@@ -19,6 +18,8 @@ import { userActions } from '../../store/user-slice';
 
 import io from 'socket.io-client'
 
+import Spinner from '../Spinner/Spinner'
+
 
 const ChatList = (props) => {
 
@@ -30,6 +31,9 @@ const ChatList = (props) => {
     const [searchValue, setSearchValue] = useState('')
     const [selectOption, setSelectOption] = useState(['friend','group','unread'])
     const [friendUsername, setFriendUsername] = useState('')
+
+    const [addFriendSpinner , setAddFriendSpinner] = useState(false)
+
     const newNotifcation = useSelector(state => state.ui.newNotifcation)
 
     const header = useSelector(state => state.ui.page)
@@ -182,6 +186,7 @@ const ChatList = (props) => {
     }
 
     const submitAddFriend = () => {
+        setAddFriendSpinner(true)
         const date = new Date()
         const requestOptions = {
             method: 'POST',
@@ -196,11 +201,13 @@ const ChatList = (props) => {
         }
 
         if(friendUsername===myUsername) {
+            setAddFriendSpinner(false)
             alert('You can\'t add yourself')
             return;
         }
 
         if(_contactlist.filter((con) => con.username === friendUsername).length > 0) {
+            setAddFriendSpinner(false)
             alert(`${friendUsername} is already your friend`)
             return;
         }
@@ -215,9 +222,11 @@ const ChatList = (props) => {
                     socket.emit('friendrequest',{sender_id: USERID, sender_name: userName, time: date, picture: userPicture, username: friendUsername,})
                     setFriendUsername('')
                     setShowAddFriend(false)
+                    setAddFriendSpinner(false)
                     alert('Friend Request Sent!')
                 }
                 if(res.status === 'false') {
+                    setAddFriendSpinner(false)
                     alert('This username doesn\'t exists, please try again')
                 }
             })
@@ -279,8 +288,9 @@ const ChatList = (props) => {
                     </div>
                     <div className={classes.addfriend_bottom}>
                         <input type='text' value={friendUsername} onChange={(e)=> setFriendUsername(e.target.value)}></input>
-                        <span onClick={submitAddFriend}>Send</span>
+                        <span onClick={submitAddFriend}>Send</span>   
                     </div>
+                    {addFriendSpinner && <Spinner />}
                 </div>
             )}
 
@@ -345,8 +355,8 @@ const ChatList = (props) => {
                     if(activechats.includes(item.id) && selectOption.includes(item.type)) {
 
                     var length = item.content.length-1
-                    var name;
-                    var last_seen;
+                    var name = '';
+                    //var last_seen;
                     var profile_picture;
                     var contactid;
                     var unread = 0;
@@ -362,7 +372,7 @@ const ChatList = (props) => {
                         contactid = 'undefined'
                         name = item.name
                         profile_picture = item.picture
-                        last_seen = '99:99'
+                        //last_seen = '99:99'
                     }
 
                     if(item.type==='friend') {
@@ -371,7 +381,7 @@ const ChatList = (props) => {
                             _contactlist.forEach(val => {
                                 if(item.owners[1] === val.id) {
                                     name = val.name+" "+val.last_name
-                                    last_seen = val.last_seen
+                                    //last_seen = val.last_seen
                                     profile_picture = val.profile_picture
                                 }
                             });
@@ -382,7 +392,7 @@ const ChatList = (props) => {
                             _contactlist.forEach(val => {
                                 if(item.owners[0] === val.id) {
                                     name = val.name+" "+val.last_name
-                                    last_seen = val.last_seen
+                                    //last_seen = val.last_seen
                                     profile_picture = val.profile_picture
                                 }
                             });

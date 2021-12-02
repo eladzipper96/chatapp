@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/user-slice'
 import { uiActions } from '../../store/ui-slice'
 
+import Spinner from '../Spinner/Spinner'
 
 const Login = (props) => {
 
@@ -18,13 +19,14 @@ const Login = (props) => {
     const [registerEmail, setRegisterEmail] = useState('')
     const [registerName, setRegisterName] = useState('')
 
+    const [spinnerFlag , setSpinnerFlag] = useState('')
+
     const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
     const sumbitHandler = (e) => {
         e.preventDefault()
-
     if(Username.length > 0 && Password.length > 0) {
-
+        setSpinnerFlag(true)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
@@ -53,9 +55,10 @@ const Login = (props) => {
                 props.setlogin(true)
             }
             if(res.length===0) {
-                alert("username of password are wrong, please try again")
-                setUsername('')
+                setSpinnerFlag(false)
                 setPassword('')
+                alert("username or password are wrong, please try again")
+                
             }
         })
         }
@@ -81,15 +84,15 @@ const Login = (props) => {
             .then(val => {
                 if(val.status === 'taken') {
                     alert('username already taken')
-                    setRegisterUser(' ')
-                    setRegisterPass(' ')
+                    setRegisterUser('')
+                    setRegisterPass('')
                 }
                 if(val.status === 'ok') {
                     alert('Registration completed, Welcome!')
-                    setRegisterUser(' ')
-                    setRegisterPass(' ')
-                    setRegisterEmail(' ')
-                    setRegisterName(' ')
+                    setRegisterUser('')
+                    setRegisterPass('')
+                    setRegisterEmail('')
+                    setRegisterName('')
                 }
             })
         }
@@ -109,20 +112,21 @@ const Login = (props) => {
 
                 <div className={classes.login}>
                     <h2 className={classes.title}>Login</h2>
-                    <form className={classes.loginform}>
+                    <form className={classes.loginform} onSubmit={sumbitHandler}>
                         <label>Username</label>
                         <input type='text' onChange={(e)=> setUsername(e.target.value)} value={Username} required></input>
                         <label>Password</label>
                         <input type='password' onChange={(e) => setPassword(e.target.value)} value={Password} required></input>
-                        <button type='submit' onClick={sumbitHandler}>Login</button>
+                        <button type='submit'>Login</button>
                     </form>
+                    {spinnerFlag && <Spinner />}
                 </div>
 
                 <div className={classes.buffer}></div>
                
                 <div className={classes.register}>
                     <h2 className={classes.title}>Register</h2>
-                    <form className={classes.registerform}>
+                    <form className={classes.registerform} onSubmit={submitRegister}>
                         <label>Username</label>
                         <input type='text' required onChange={(e) => {setRegisterUser(e.target.value)}} value={registerUser}></input>
                         <small>Username has to be minimum of 4 letters</small>
@@ -135,10 +139,11 @@ const Login = (props) => {
                         <label>Full Name</label>
                         <input type='text' required onChange={(e) => {setRegisterName(e.target.value)}} value={registerName}></input>
                         <small>Full name must include both first and last name</small>
-                        <button type='submit' onClick={submitRegister}>Sign Up</button>
+                        <button type='submit'>Sign Up</button>
                     </form>
                 </div>
             </div>
+            
         </div>
     )
 }

@@ -32,6 +32,8 @@ const ContactInfo = () => {
 
     const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
+    const date = new Date()
+
     useEffect(() => {
         if(blocked_array.includes(selected_id)) {
             setBlocked(true)
@@ -156,7 +158,7 @@ const ContactInfo = () => {
             <div className={classes.info}>
                 <div className={classes.item}>
                     <div className={classes.subject}>Local Time</div>
-                    <div className={classes.value}>13:23 PM</div>
+                    <div className={classes.value}>{date.toISOString().substring(11,16)}</div>
                     <img className={classes.icon} src={time} alt="time"></img>
                 </div>
                 <div className={classes.item}>
@@ -166,7 +168,7 @@ const ContactInfo = () => {
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Phone Number</div>
-                    <div className={classes.value}>{contact.phone}</div>
+                    <div className={classes.value}>{contact.phone.length > 0 ? contact.phone: 'None'}</div>
                     <img className={classes.icon} src={phone} alt="phone"></img>
                 </div>
                 <div className={classes.item}>
@@ -176,12 +178,12 @@ const ContactInfo = () => {
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Website</div>
-                    <div className={classes.value}>{contact.website}</div>
+                    <div className={classes.value}>{contact.website.length>0 ? contact.website : 'None'}</div>
                     <img className={classes.icon} src={website} alt="website"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Address</div>
-                    <div className={classes.value}>{contact.address}</div>
+                    <div className={classes.value}>{contact.address.length > 0 ? contact.address : 'None'}</div>
                     <img className={classes.icon} src={house} alt="address"></img>
                 </div>
 
@@ -190,22 +192,22 @@ const ContactInfo = () => {
             <div className={classes.info}>
                 <div className={classes.item}>
                         <div className={classes.subject}>Facebook</div>
-                        <div className={classes.value}>{contact.facebook}</div>
+                        <div className={classes.value}>{contact.facebook.length > 0 ? contact.facebook : 'None'}</div>
                         <img className={classes.icon} src={facebook} alt="facebook"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Twitter</div>
-                        <div className={classes.value}>{contact.twitter}</div>
+                        <div className={classes.value}>{contact.twitter.length > 0 ? contact.facebook : 'None'}</div>
                         <img className={classes.icon} src={twitter} alt="twitter"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Instagram</div>
-                        <div className={classes.value}>{contact.instagram}</div>
+                        <div className={classes.value}>{contact.instagram.length > 0 ? contact.instagram : 'None'}</div>
                         <img className={classes.icon} src={instagram} alt="instagram"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Linkedin</div>
-                        <div className={classes.value}>{contact.linkedin}</div>
+                        <div className={classes.value}>{contact.linkedin.length > 0 ? contact.linkedin : 'None'}</div>
                         <img className={classes.icon} src={linkedin} alt="linkedin"></img>
                 </div>
             </div>

@@ -63,22 +63,22 @@ const ContactInfo = (props) => {
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Phone Number</div>
-                    <div className={classes.value}>{user.phone}</div>
+                    <div className={classes.value}>{user.phone.length > 0 ? user.phone : 'None'}</div>
                     <img className={classes.icon} src={phone} alt="phone"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Email</div>
-                    <div className={classes.value}>{user.email}</div>
+                    <div className={classes.value}>{user.email.length > 0 ? user.email : 'None'}</div>
                     <img className={classes.icon} src={email} alt="email"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Website</div>
-                    <div className={classes.value}>{user.website}</div>
+                    <div className={classes.value}>{user.website.length > 0 ? user.website : 'None'}</div>
                     <img className={classes.icon} src={website} alt="website"></img>
                 </div>
                 <div className={classes.item}>
                     <div className={classes.subject}>Address</div>
-                    <div className={classes.value}>{user.address}</div>
+                    <div className={classes.value}>{user.address.length > 0 ? user.address : 'None'}</div>
                     <img className={classes.icon} src={house} alt="address"></img>
                 </div>
 
@@ -87,22 +87,22 @@ const ContactInfo = (props) => {
             <div className={classes.info}>
                 <div className={classes.item}>
                         <div className={classes.subject}>Facebook</div>
-                        <div className={classes.value}>{user.facebook}</div>
+                        <div className={classes.value}>{user.facebook.length > 0 ? user.facebook : 'None'}</div>
                         <img className={classes.icon} src={facebook} alt="facebook"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Twitter</div>
-                        <div className={classes.value}>{user.twitter}</div>
+                        <div className={classes.value}>{user.twitter.length > 0 ? user.twitter : 'None'}</div>
                         <img className={classes.icon} src={twitter} alt="twitter"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Instagram</div>
-                        <div className={classes.value}>{user.instagram}</div>
+                        <div className={classes.value}>{user.instagram.length > 0 ? user.instagram : 'None'}</div>
                         <img className={classes.icon} src={instagram} alt="instagram"></img>
                 </div>
                 <div className={classes.item}>
                         <div className={classes.subject}>Linkedin</div>
-                        <div className={classes.value}>{user.linkedin}</div>
+                        <div className={classes.value}>{user.linkedin.length > 0 ? user.linkedin : 'None'}</div>
                         <img className={classes.icon} src={linkedin} alt="linkedin"></img>
                 </div>
             </div>

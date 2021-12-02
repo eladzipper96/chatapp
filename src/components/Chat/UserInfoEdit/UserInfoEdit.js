@@ -19,7 +19,8 @@ const UserInfoEdit = () => {
         twitter: temp.twitter,
         instagram: temp.instagram,
         linkedin: temp.linkedin,
-        moto: temp.moto
+        moto: temp.moto,
+        profile_picture: temp.profile_picture
     })
     const [password, setPassword] = useState({cur: "", new: "", repeat: ""})
     const dispatch = useDispatch()
@@ -48,6 +49,7 @@ const UserInfoEdit = () => {
         }
 
         if(str==='Account') {
+            
             fetch('http://localhost:5000/account', requestOptions).then(
                 dispatch(userActions.SetUser({
                     ...temp,
@@ -58,7 +60,8 @@ const UserInfoEdit = () => {
                     email: user.email,
                     website: user.website,
                     address: user.address,
-                    moto: user.moto
+                    moto: user.moto,
+                    profile_picture: user.profile_picture
                 })),
                 setShowAccount(true)
             )
@@ -110,7 +113,8 @@ const UserInfoEdit = () => {
                     email: temp.email,
                     website: temp.website,
                     address: temp.address,
-                    moto: temp.moto
+                    moto: temp.moto,
+                    profile_picture: temp.profile_picture
                 }
             })  
             
@@ -188,10 +192,15 @@ const UserInfoEdit = () => {
                         <input type="text" required value={user.address}
                         onChange={(e) => setUser(val => {return {...val,address: e.target.value}})}></input>
                     </div>
-                         <div className={classes.input}>
+                    <div className={classes.input}>
                         <label>Moto</label>
                         <input type="text" required value={user.moto}
                         onChange={(e) => setUser(val => {return {...val,moto: e.target.value}})}></input>
+                    </div>
+                    <div className={classes.input}>
+                        <label>Profile Picture (URL)</label>
+                        <input type="text" required value={user.profile_picture}
+                        onChange={(e) => setUser(val => {return {...val,profile_picture: e.target.value}})}></input>
                     </div>
                </div> 
                <div className={classes.buttons}>

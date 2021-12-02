@@ -3,10 +3,8 @@ import icon from '../../assets/chaticon.svg'
 import chat from '../../assets/chaticon_nav.svg'
 import friends from '../../assets/friends.svg'
 import profile from '../../assets/profile.svg'
-import io from 'socket.io-client'
 
-import { useDispatch, useSelector } from 'react-redux';
-import { userActions } from '../../store/user-slice';
+import { useDispatch } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
 
 const NavBar = () => {

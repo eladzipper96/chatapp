@@ -67,6 +67,7 @@ const ChatRoom = (props) => {
                             if(temp[0].owners.includes(con.id)) {
                                     return `${con.name} ${con.last_name},`
                             }
+                            return "chatroom line 70 error";
                         })
                         setGroupNames([...names,userName].join(' '))
                     }

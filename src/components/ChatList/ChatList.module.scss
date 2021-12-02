@@ -8,6 +8,7 @@
     border-right-style: solid;
     border-right-color: gray;
     border-width: 1.5px;
+    overflow: hidden;
  
     & h3 {
         grid-row: 1/2;
@@ -127,7 +128,7 @@
 .addfriend {
     position: absolute;
     z-index: 1000000;
-    right: 9rem;
+    left: 3rem;
     top: 3rem;
     font-size: 1.6rem;
     border-style: solid;
@@ -135,16 +136,16 @@
     border-width: 1.5px;
     border-color: rgb(204, 204, 204);
     background-color: white;
-    padding: 0.5rem 1rem;
+    padding: 2rem 3rem;
     display: flex;
     flex-direction: column;
 
     &_top {
-        margin: 0.5rem 0rem;
+        margin-bottom: 1.5rem;
     }
 
     &_bottom {
-        margin-bottom: 0.5rem;
+        margin-bottom: 3rem;
 
         & span {
             cursor: pointer;
@@ -174,6 +175,7 @@
 }
 
 .notificationscontainer {
+    overflow: hidden;
     position: absolute;
     width: 97%;
     max-height: 400px;

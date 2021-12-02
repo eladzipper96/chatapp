@@ -8,7 +8,7 @@ const Friends = () => {
     const firstlist = useSelector(state => state.user.contacts)
     const secondlist = [...firstlist] // fix a bug of trying change readonly array
     const FinalList = secondlist.sort((a,b) => {
-        return a.name.charCodeAt(0) - b.name.charCodeAt(0)
+        return a.name.toUpperCase().charCodeAt(0) - b.name.toUpperCase().charCodeAt(0)
     })
 
 
@@ -18,7 +18,7 @@ const Friends = () => {
                 if(index===0) {
                     return (
                         <>
-                        <div className={classes.letter}>{item.name.substring(0,1)}</div>
+                        <div className={classes.letter}>{item.name.substring(0,1).toUpperCase()}</div>
                         <ChatItem key={item.name} name={item.name+" "+item.last_name} time=' ' msg={item.moto} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
                         </>
                     )  
@@ -26,7 +26,7 @@ const Friends = () => {
                 if(item.name.charCodeAt(0) !== FinalList[index-1].name.charCodeAt(0)) {
                     return (
                         <>
-                        <div className={classes.letter}>{item.name.substring(0,1)}</div>
+                        <div className={classes.letter}>{item.name.substring(0,1).toUpperCase()}</div>
                         <ChatItem key={item.name} name={item.name+" "+item.last_name} time=' ' msg={item.moto} contacts={true} id={item.id} photo={item.profile_picture}></ChatItem>
                         </>
                     )

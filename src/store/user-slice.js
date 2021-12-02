@@ -51,7 +51,10 @@ const userSlice = createSlice({
             state.blocked = action.payload.blocked
         },
         updateChat(state, action) {
+            console.log('------------------------------')
+            console.log('this is the new chat')
             console.log(action.payload)
+            console.log('------------------------------')
             state.chats = action.payload;
         },
         updateActiveChats(state, action) {
@@ -61,6 +64,10 @@ const userSlice = createSlice({
             state.notifications = action.payload
         },
         updateContacts (state, action) {
+            console.log('------------------------------')
+            console.log('this is the contacts chat')
+            console.log(action.payload)
+            console.log('------------------------------')
             state.contacts = action.payload
         },
         updateBlocked (state, action) {

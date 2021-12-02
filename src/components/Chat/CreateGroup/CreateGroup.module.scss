@@ -75,6 +75,7 @@
 .overflowcontainer {
     overflow-y: scroll;
     padding-right: 5rem;
+    height: 340px;
     transform: translateX(3rem);
 }
 
@@ -103,6 +104,10 @@
         background-color: $color-primary;
         color: white;
         border-color: $color-primary;
+    }
+
+    & img {
+        border-radius: 50%;
     }
 
 }
