@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-    {!LoggedIn &&
+    {(!LoggedIn) &&
      <div>
        <Login setlogin={setLoggedIn}/>
     </div>}

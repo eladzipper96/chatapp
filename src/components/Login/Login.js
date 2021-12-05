@@ -1,7 +1,7 @@
 import classes from './Login.module.scss'
 import logo from '../../assets/chaticon.svg'
 import io from 'socket.io-client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/user-slice'
 import { uiActions } from '../../store/ui-slice'
@@ -21,15 +21,54 @@ const Login = (props) => {
 
     const [spinnerFlag , setSpinnerFlag] = useState('')
 
+    const cookies = document.cookie
+
     const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
+    useEffect(() => {
+
+    
+        const cookieChecker = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_API_URL}/cookiecheck`, {credentials: 'include', headers: { 'Content-Type': 'application/json'}})
+                const result = await response.text()
+                const res = JSON.parse(result);
+                if(res.length>0) {
+                    dispatch(userActions.SetUser(res[0]))
+                
+                    const temp = res[0].chats.map((chat) => {
+                        const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${chat.id}`})
+    
+                        return {
+                            ...chat,
+                            socket: socket
+                        }
+                    })
+                    const controlSocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res[0]._id}`})
+                    dispatch(userActions.updateChat(temp))
+                    dispatch(uiActions.setControlSocket(controlSocket))
+                    props.setlogin(true)
+                }
+            }
+            catch {
+                console.log("not logged in")
+            }
+    
+        }
+        cookieChecker()
+
+    },[REACT_APP_API_URL])
+
     const sumbitHandler = (e) => {
-        e.preventDefault()
-    if(Username.length > 0 && Password.length > 0) {
+
+    e.preventDefault()
+
+    if(Username.length > 0 && (Password.length > 0 || Password === true)) {
         setSpinnerFlag(true)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
+            credentials: 'include',
             body: JSON.stringify({
                 username: Username,
                 password: Password
@@ -101,7 +140,18 @@ const Login = (props) => {
         }
     }
 
-    return (
+    if(cookies.length!==0) {
+        return (
+            <div className={classes.loading}>
+                <div className={classes.logo}>
+                    <img src={logo} alt="logo"></img>
+                </div>
+                <Spinner />
+            </div>
+        )
+    }
+
+    return ( 
         <div className={classes.container}>
 
             <div className={classes.logo}>
@@ -142,8 +192,7 @@ const Login = (props) => {
                         <button type='submit'>Sign Up</button>
                     </form>
                 </div>
-            </div>
-            
+            </div>    
         </div>
     )
 }
