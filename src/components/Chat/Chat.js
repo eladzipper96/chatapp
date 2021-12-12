@@ -24,20 +24,15 @@ const Chat = () => {
     const [ContactBool, setContactBool] = useState(false)
     const [socket, setSocket] = useState()
 
+
     useEffect(()=> {
-
-            chats.forEach(chat => {
-                if(chat.id === chatId) {
-                setSocket(chat.socket)
-                }
-            }) 
-        
-
+     
         if(selctedContact !== "") {
             setContactBool(true)
         }
     },[ContactBool,selctedContact,chatId])
 
+    // Create a chatroom for each chat (displaying only selected chat)
     const rooms = chats.map(chat => {
         return <ChatRoom key={chat.id} socket={chat.socket}/>
     })
@@ -58,13 +53,8 @@ const Chat = () => {
             </div>
             }
 
-        </div>
-       
+        </div>    
     )       
 }
 
 export default Chat;
-
-/** 
- * {(header === 'Chats' && socket !== undefined) && <ChatRoom socket={socket}/>}
-*/

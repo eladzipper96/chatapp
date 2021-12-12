@@ -1,4 +1,5 @@
 import classes from './ChatList.module.scss';
+
 import dots from '../../assets/dots.svg'
 import dots_black from '../../assets/dots_black.svg'
 import bell from '../../assets/bell.svg'
@@ -19,6 +20,10 @@ import { userActions } from '../../store/user-slice';
 import io from 'socket.io-client'
 
 import Spinner from '../Spinner/Spinner'
+/**
+ * ChatList component is responsible for rendering both ChatList itself and
+ * Contacts/UserInfo accord to the internal router state
+ */
 
 
 const ChatList = (props) => {
@@ -56,19 +61,21 @@ const ChatList = (props) => {
 
     const dispatch = useDispatch()
 
-
+    // Responsible of toggle preview the Add Friend window
     const addFriendHandler = () => {
         setShowAddFriend(val => !val)
         setShowDetails(false)
         setShowNotifcations(false)
     }
-    
+
+    // Responsible of toggle preview the Details (Options aka three dots) window
     const showDetailsHandler = () => {
         setShowDetails(val => !val)
         setShowAddFriend(false)
         setShowNotifcations(false)
     }
 
+    // Responsible of toggle preview the notifcations window
     const showNotificationsHandler = () => {
         setShowNotifcations(val => !val)
         dispatch(uiActions.setnewNotifcation(false))
@@ -76,6 +83,7 @@ const ChatList = (props) => {
         setShowAddFriend(false)
     }
 
+    // Handle Rejecting Friend request on the notifcations window
     const RejectHandler = (obj) => {
         const requestOptions = {
             method: 'POST',
@@ -87,13 +95,20 @@ const ChatList = (props) => {
            })
         }
 
+        // filtering out the notifcations for deletion
         const arr = notifications.filter((not) => {
             return not.from_id !== obj.from_id
         })
 
+        // updating the state and the Database after removal from Notifcations array
         dispatch(userActions.updateNotifications(arr))
-        fetch(`${REACT_APP_API_URL}/notification`, requestOptions).then(console.log('removed notifcation'))
+        fetch(`${REACT_APP_API_URL}/notification`, requestOptions).then(console.log(''))
     }
+
+    // Execute when the user accept a friend request.
+    // User fetch information about the new contact, updating the server
+    // about the acceptance, which in return sending the contact a notifcation
+    // and the user information.
 
     const AcceptHandler = (obj) => {
 
@@ -116,8 +131,11 @@ const ChatList = (props) => {
            })
         }
 
+        // Creating new chat document on the Database
         fetch(`${REACT_APP_API_URL}/create_newchat`, Options).then(val => val.json())
         .then(val => {
+
+            // new contact information recived from server
             const contact = {
                 name: val.name,
                 username: val.username,
@@ -136,9 +154,10 @@ const ChatList = (props) => {
                 profile_picture: val.profile_picture,
                 last_seen: val.last_seen
             }
-
+            // server returned the chat document id, creating a socket for the chat
             const socketforchat = io(`${REACT_APP_API_URL}`, {query:`chatid=${val.chatid}`})
 
+            // chat object information fetched from server
             const chat = {
                 id: val.chatid,
                 owners: val.chatowners,
@@ -148,11 +167,15 @@ const ChatList = (props) => {
                 socket: socketforchat
             }
 
+            // updating the states with new objects
             dispatch(userActions.updateContacts([..._contactlist,contact]))
             dispatch(userActions.updateChat([..._chats,chat]))
 
+            // creating a temp socket, in order to send the new contact
+            // the user information and chat room information
             const tempsocket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.from_id}`})
 
+            // user emitting the information
             tempsocket.emit('acceptfriend', {
                 chatid: val.chatid,
                 owners: val.chatowners,
@@ -175,19 +198,25 @@ const ChatList = (props) => {
             })
         })
 
+        // removing the notifcation from the array state
         const arr = notifications.filter((not) => {
             return not.from_id !== obj.from_id
         })
 
-        fetch(`${REACT_APP_API_URL}/notification`, DeleteNotifcationOptions).then(console.log('removed notifcation'))
+        // removing the notifcation from the database
+        fetch(`${REACT_APP_API_URL}/notification`, DeleteNotifcationOptions).then(console.log(''))
 
+        // updating DOM
         dispatch(userActions.updateNotifications(arr))
 
     }
 
+    // Handling the submition of a new friend request
     const submitAddFriend = () => {
-        setAddFriendSpinner(true)
+
+        setAddFriendSpinner(true) // render to the DOM a loading spinner
         const date = new Date()
+
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
@@ -200,23 +229,28 @@ const ChatList = (props) => {
            })
         }
 
+        // Preventing user from adding himself
         if(friendUsername===myUsername) {
             setAddFriendSpinner(false)
             alert('You can\'t add yourself')
             return;
         }
 
+        // Preventing user from adding a existing contact
         if(_contactlist.filter((con) => con.username === friendUsername).length > 0) {
             setAddFriendSpinner(false)
             alert(`${friendUsername} is already your friend`)
             return;
         }
 
+        // case contact username input is legit
         if(friendUsername.length>0) {
+
             fetch(`${REACT_APP_API_URL}/addfriend`, requestOptions)
             .then(res => res.json())
             .then(res => {
-                console.log(res)
+
+                // case username exist
                 if(res.status === 'true') {
                     const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${res.id}`})
                     socket.emit('friendrequest',{sender_id: USERID, sender_name: userName, time: date, picture: userPicture, username: friendUsername,})
@@ -225,6 +259,8 @@ const ChatList = (props) => {
                     setAddFriendSpinner(false)
                     alert('Friend Request Sent!')
                 }
+
+                // case username doesn't exist
                 if(res.status === 'false') {
                     setAddFriendSpinner(false)
                     alert('This username doesn\'t exists, please try again')
@@ -232,6 +268,9 @@ const ChatList = (props) => {
             })
         }
     }
+
+    // Sorting the ChatList array by their last update
+    // implements active chats shown on top by order
     const temparr = [..._chats]
     const sorted_arr = temparr.sort((a,b) => {
         var date_a = new Date(a.updatedAt)
@@ -239,9 +278,11 @@ const ChatList = (props) => {
         return date_b.getTime() - date_a.getTime()
         
     })
+    // -------------------------------------------------
 
     return (
     <div className={classes.container}>
+
 
         <div className={classes.top}>
             <h3>{header}</h3>

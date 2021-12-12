@@ -61,10 +61,6 @@ const CreateGroup = () => {
                 })
             })
             
-                //dispatch(userActions.updateChat(
-                    //[...chats,
-                    //{id: res, owners: groupMembers, type:'group', content: [], name: `${userName}'s Group`}]))
-               // dispatch(userActions.updateActiveChats([...activeChats,res]))
 
             dispatch(uiActions.setshowCreateGroup(false))
         }

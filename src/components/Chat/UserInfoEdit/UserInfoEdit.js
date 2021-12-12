@@ -261,7 +261,7 @@ const UserInfoEdit = () => {
                         <label>Current Password</label>
                         <input type="password" required value={password.cur}                            onChange={(e) => {
                                 setPassword(pass => {
-                                   console.log("updating")
+
                                     return {
                                         repeat: pass.repeat,
                                         new: pass.new,
@@ -275,7 +275,6 @@ const UserInfoEdit = () => {
                         <input type="password" required value={password.new}
                             onChange={(e) => {
                                 setPassword(pass => {
-                                   console.log("updating")
                                     return {
                                         repeat: pass.repeat,
                                         new: e.target.value,
@@ -289,7 +288,6 @@ const UserInfoEdit = () => {
                         <input type="password" required value={password.repeat}
                             onChange={(e) => {
                                 setPassword(pass => {
-                                    console.log("updating")
                                     return {
                                         repeat: e.target.value,
                                         new: pass.new,

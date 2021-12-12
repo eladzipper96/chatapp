@@ -3,10 +3,17 @@ import ChatItem from "./ChatItem/ChatItem";
 
 import { useSelector } from 'react-redux';
 
-const Friends = () => {  
+/**
+ * Render to the screen a list of ChatItem (Card component) with the contacts information
+ * and a flag to ChatItem component
+ */
+
+const Contacts = () => {  
+
+    // Sorting the array by the ASCII Code of the first letter in contact first name.
 
     const firstlist = useSelector(state => state.user.contacts)
-    const secondlist = [...firstlist] // fix a bug of trying change readonly array
+    const secondlist = [...firstlist] // due to readonly array
     const FinalList = secondlist.sort((a,b) => {
         return a.name.toUpperCase().charCodeAt(0) - b.name.toUpperCase().charCodeAt(0)
     })
@@ -15,7 +22,11 @@ const Friends = () => {
     return (
         <div>
             {FinalList.map((item,index) => {
-                if(index===0) {
+
+                // contacts={true} prop lets ChatItem know how to render
+                // the component for Contacts and not to ChatList
+
+                if(index===0) { 
                     return (
                         <>
                         <div className={classes.letter}>{item.name.substring(0,1).toUpperCase()}</div>
@@ -37,4 +48,4 @@ const Friends = () => {
     )
 }
 
-export default Friends;
+export default Contacts;

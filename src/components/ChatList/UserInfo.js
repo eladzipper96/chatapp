@@ -12,17 +12,25 @@ import twitter from '../../assets/twitter.svg'
 import instagram from '../../assets/instagram.svg'
 import linkedin from '../../assets/linkedin.svg'
 
-import { useSelector } from 'react-redux'
+import { useSelector ,useDispatch } from 'react-redux'
+import { uiActions } from '../../store/ui-slice'
 
 const ContactInfo = (props) => {
 
+    const dispatch = useDispatch()
+
+    // State Selectors
     const user = useSelector(state => state.user)
     const controlSocket = useSelector(state => state.ui.controlSocket)
+
+    // Local Variables
     var tempdate = new Date()
     tempdate = tempdate.setHours(tempdate.getHours()+2)
     tempdate = new Date(tempdate)
     const localtime = tempdate.toISOString().substring(11,16)
 
+    // Util Function that Deletes all Cookies,
+    // runs on logoutHandler below.
     function deleteAllCookies() {
         var cookies = document.cookie.split(";");
     
@@ -34,20 +42,29 @@ const ContactInfo = (props) => {
         }
     }
 
+    // Logout Handler, Clears all cookies,intervals and terminate all sockets.
     const logoutHandler = () => {
     
-        deleteAllCookies()
+        deleteAllCookies() // clear cookies
 
-        props.setLoggedIn(false)
-        user.chats.forEach((chat) => {
+        props.setLoggedIn(false) // return user to login/register page
+
+        // terminate all contacts chat sockets
+        user.chats.forEach((chat) => { 
             chat.socket.emit('deletesocket')
         })  
+
         /// Clears all Intervals/Timeouts
         var highestTimeoutId = setTimeout(";");
         for (var i = 0 ; i < highestTimeoutId ; i++) {
         clearTimeout(i); 
-        }   
+        }
+          
+        // terminate Control Socket
         controlSocket.emit('deletesocket')
+
+        // reset the internal router state
+        dispatch(uiActions.SetPage('Pages'))
     }
 
 

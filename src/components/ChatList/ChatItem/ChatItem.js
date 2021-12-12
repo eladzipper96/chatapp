@@ -15,13 +15,15 @@ const ChatItem = (props) => {
     const screenwidth = window.screen.width
     const [unread, setUnread] = useState(0)
 
-
+    // Relevent only when ChatItem is a ChatList item, reset the unread bubble.
     useEffect(()=> {
         if(props.unread) {
             setUnread(props.unread)
         }
     },[props.unread])
 
+    // Handeling the click events when clicking on ChatItem
+    // actions being executed depents on the internal router
     const ClickHandler = () => {
         if(page==='Contacts') {
             dispatch(uiActions.setSelectedContact(props.id))
@@ -40,8 +42,8 @@ const ChatItem = (props) => {
         }
     }
 
+    // updating new messages 'unread' property to 'read'
     const resetNewMessages = () => {
-        console.log("reseting the chat")
         const temp = chats.map(chat => {
             if(chat.id === props.chatid) {
                 const arr = chat.content.map(msg => {

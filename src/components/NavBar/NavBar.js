@@ -9,11 +9,7 @@ import { uiActions } from '../../store/ui-slice';
 
 const NavBar = () => {
 
-
     const dispatch = useDispatch()
-
-
-
 
     return (
     <div className={classes.main}>

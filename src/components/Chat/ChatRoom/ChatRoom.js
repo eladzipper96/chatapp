@@ -57,7 +57,7 @@ const ChatRoom = (props) => {
 
     useEffect(() => {
 
-        if(chatId.length>2) { /// this is TEMP!!!!!!!!!
+        if(chatId.length>2) { // Ignore temp dead socket
 
                 const temp = chatArray.filter(item => item.id === chatId)
                 if(temp.length>0) {
@@ -136,6 +136,17 @@ const ChatRoom = (props) => {
 
     props.socket.on('newgroup', (obj) => {
         const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.id}`})
+
+        const newChat = {
+            socket: socket,
+            content: [],
+            id: obj.id,
+            owners: obj.owners,
+            type: 'group',
+            name: obj.name,
+            updatedAt: new Date(),
+            picture: groupprofile
+        }
         dispatch(userActions.updateChat([...chatArray,
             {
             socket: socket,
@@ -148,7 +159,6 @@ const ChatRoom = (props) => {
             picture: groupprofile
             }]))
         dispatch(userActions.updateActiveChats([...activeChats,obj.id]))
-        console.log(obj)
     })
 
 
@@ -210,7 +220,6 @@ const ChatRoom = (props) => {
             if(item.id === chatId) {
 
                 if(values) { // you get values only when your contact send message
-                    console.log("the mesg read = false")
                     temp = [...item.content, {author: values.author, authorname: values.authorname, value: values.value, time: `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`, read: false, year: datestr}]  
                 }
                 if(!values) {
