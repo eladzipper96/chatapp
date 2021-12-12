@@ -34,6 +34,9 @@ const ContactInfo = () => {
 
     const date = new Date()
 
+    // if contact is blocked, update states with in return change the rendering
+    // of the buttons
+
     useEffect(() => {
         if(blocked_array.includes(selected_id)) {
             setBlocked(true)
@@ -53,6 +56,7 @@ const ContactInfo = () => {
     chatid = temp_2[0].id
 
 
+    // redirect to the Chat page and updating the relevent states
     const msgButtonHandler = () => {
 
         if(!activeChats.includes(chatid)) 
@@ -83,6 +87,7 @@ const ContactInfo = () => {
 
     }
 
+    
     const blockHandler = () => {
 
         const requestOptions = {

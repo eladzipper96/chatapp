@@ -55,13 +55,14 @@ const ChatRoom = (props) => {
     const dispatch = useDispatch()
     var [GroupNames, setGroupNames] = useState()
 
+    // handle the setup of the ChatRoom, rendering the messages, contact information and etc../
     useEffect(() => {
 
-        if(chatId.length>2) { // Ignore temp dead socket
-
+                // find the chat object
                 const temp = chatArray.filter(item => item.id === chatId)
                 if(temp.length>0) {
 
+                    // case the chat object represent a group chat
                     if(temp[0].type === 'group') {
                         const names = Contacts.map(con => {
                             if(temp[0].owners.includes(con.id)) {
@@ -71,16 +72,22 @@ const ChatRoom = (props) => {
                         })
                         setGroupNames([...names,userName].join(' '))
                     }
+
+                    // updaing chat state (messages rendering) and ChatType (ui rendering)
                     setChat(temp[0].content)
                     setChatType(temp[0].type) 
                 }
 
+                // fetching the last known last seen of contact and rendering it
                 if(temp[0].type ==='friend') lastSeenHandler()         
-        }
+        
+        // removes all unread message notifaction if exist
         setShowPopUp(false)
 
     },[chatId,chatArray,Chat,Contacts])
 
+    // When Entering a chat, updating the server about the status
+    // of unread messages to read.
     useEffect(() => {
         if(chatId.length!=='a') {
                 const requestOptions = {
@@ -103,29 +110,40 @@ const ChatRoom = (props) => {
 
     },[chatId])
 
+
+q   // scrolling the user to the bottom of the chat
     useEffect(() => {
         scrollToBottom()
     },[Chat])
 
 
+    // sound when you get a message
     const beep = () => {
     sound.volume = 0.2;
     sound.play();    
     }
 
+
+    // Listening to Messages, then renders them
     props.socket.on('message', (obj) => {
 
+        // Checks if sender is not blocked
         if(!blocked.includes(obj.author)) {
 
+            // In case chat is not on ChatList, adds it.
             if(!activeChats.includes(obj.chatid)) {
                 dispatch(userActions.updateActiveChats([obj.chatid,...activeChats]))
             }
 
+            // handling new message in case author is not the user
             if(obj.author !== userID) {
                 recievemsgHandler(obj)
                 beep()
             }
         }
+
+        // in case sender is blocked, update the chat object but not
+        // rendering to the screen.
         if(blocked.includes(obj.author)) {
                 if(obj.author !== userID) {
                 recievemsgHandler(obj)} 
@@ -134,19 +152,11 @@ const ChatRoom = (props) => {
 
     })
 
+    // listening if a contact added you to a group chat
     props.socket.on('newgroup', (obj) => {
         const socket = io(`${REACT_APP_API_URL}`, {query:`chatid=${obj.id}`})
 
-        const newChat = {
-            socket: socket,
-            content: [],
-            id: obj.id,
-            owners: obj.owners,
-            type: 'group',
-            name: obj.name,
-            updatedAt: new Date(),
-            picture: groupprofile
-        }
+        // creating a chat object to add to the chats array
         dispatch(userActions.updateChat([...chatArray,
             {
             socket: socket,
@@ -158,10 +168,13 @@ const ChatRoom = (props) => {
             updatedAt: new Date(),
             picture: groupprofile
             }]))
+
+        // adding the chatid to the activechats array so app knows to render
+        // this chat in ChatList
         dispatch(userActions.updateActiveChats([...activeChats,obj.id]))
     })
 
-
+    // fetching the last seen of the contacts and rendering it
     const lastSeenHandler = () => {
 
         const temp = Contacts.filter(item => item.id === contactId)
@@ -173,7 +186,7 @@ const ChatRoom = (props) => {
 
         if(temp.length>0) {
             if(datebool && timebool) {
-                setLastSeen('now') // in future it will be 'Now'
+                setLastSeen('now') 
             }
             if(datebool && !timebool) {
                 setLastSeen(`${isostring.substring(11,16)}`)
@@ -184,7 +197,8 @@ const ChatRoom = (props) => {
         }
     }
     
-
+    // when receving a message this function execute, adds the message to the right
+    // chat object and renders it
     const recievemsgHandler = (obj) => {
         const date = new Date()
         const datestr = {day:date.getDate(),month:date.getMonth()+1,year: date.getFullYear()}
@@ -210,7 +224,7 @@ const ChatRoom = (props) => {
         dispatch(userActions.updateChat(temparr))
     }
 
-
+    // update the last message of a chat to the 'last_message' prop of a ChatItem in ChatList
     const updateLastMessage = (date,minutes,values) => {
         const tempdate = new Date()
         const datestr = {day:date.getDate(),month:date.getMonth()+1,year: date.getFullYear()}
@@ -245,10 +259,12 @@ const ChatRoom = (props) => {
         dispatch(userActions.updateChat(temparr))
     }
 
+    // scrolling user to the bottom of the the chat
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "auto" })
       }
 
+    // Execute when user sending a message
     const submitHandler = (e) => {
         e.preventDefault()
 
@@ -262,8 +278,6 @@ const ChatRoom = (props) => {
             }
 
             props.socket.emit('message', {author: userID, authorname: userName, value: inputValue, id:`${Math.floor(Math.random() * 10000)}`, time: `${date.getHours()}:${minutes}`, chatid: chatId, year: datestr})
-
-            //setChat(chat => [...chat,{author: userID, value: inputValue, time: `${date.getHours()}:${minutes}`, chatid: chatId}])
 
             updateLastMessage(date,minutes)
 

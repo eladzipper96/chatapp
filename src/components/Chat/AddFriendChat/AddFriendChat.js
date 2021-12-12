@@ -5,25 +5,33 @@ import { uiActions } from '../../../store/ui-slice';
 import { userActions } from '../../../store/user-slice';
 
 const AddFriendChat = () => {
+
     const dispatch = useDispatch()
     const contacts = useSelector(state => state.user.contacts)
     const chats = useSelector(state => state.user.chats)
     const chatId = useSelector(state => state.ui.chatId)
     const temp = [...contacts] // this is copy the contacts array due to readonly.
 
+    // sorting contacts by the first letter of their first name
+    // used on compontent render
     const sorted_contacts = temp.sort((a,b) => {
        return a.name.charCodeAt(0) - b.name.charCodeAt(0)
     })
 
+    // finding the chat object in the chats array
     const owners = chats.filter((chat) => {
         if(chat.id === chatId) return chat
     })
 
+    // on the sorted array (sorted_contacts) removed all friends with a active chat.
     const finalarray = sorted_contacts.filter(con => {
         if(!owners[0].owners.includes(con.id)) return con
     })
 
+
+    // adding the chat object found previously and adds it to the global chat array
     const clickHandler = (contact) => {
+        
          const newchats = chats.map((chat) => {
              if(chat.id===chatId) {
                  return {

@@ -1,11 +1,14 @@
 import classes from './ChatDialog.module.scss';
 
 const ChatDialog = (props) => {
+
     var MainClass = [classes.main]
     var ContainerClass = [classes.container]
     var TimeClass = [classes.time]
     var PictureClass = [classes.picture_container];
 
+    // changes the component css styling according to
+    // a prop passed by ChatRoom
     if(props.owner === 'user') {
         MainClass.push(classes.main_user)
         ContainerClass.push(classes.blue)

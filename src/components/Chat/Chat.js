@@ -26,10 +26,13 @@ const Chat = () => {
 
 
     useEffect(()=> {
-     
+        
+        // Checks if to render ContactInfo component (in case we selected a contact)
+        // otherwise (case selectedContact === "") renders a placeholder component
         if(selctedContact !== "") {
             setContactBool(true)
         }
+
     },[ContactBool,selctedContact,chatId])
 
     // Create a chatroom for each chat (displaying only selected chat)
